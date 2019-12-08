@@ -103,7 +103,7 @@ const calculateTrajectory = (wire) => {
         }
 
         if (earlyTerminate) {
-            null
+            arr = [];
             break;
         }
     }
