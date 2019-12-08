@@ -37,8 +37,6 @@ const partTwo = (x = wireOne, y = wireTwo) => {
                 stepMatches.push(arr1.length + arr2.length);
             }
         }
-
-        console.log(`${i} of ${trajOneLength}`);
     }
 
     return stepMatches.sort((a, b) => a - b)[0];
