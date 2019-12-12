@@ -102,9 +102,9 @@ const partTwo = () => {
         for (let z = 0; z < 50; z++) {
             const panel = panels.find(({ x, y }) => x === z && y === i);
             if (panel) {
-                row += panel.coating === 1 ? ' # ' : ' . ';
+                row += panel.coating === 1 ? '█' : ' ';
             } else {
-                row += ' . ';
+                row += ' ';
             }
         }
         canvas.push(row);
