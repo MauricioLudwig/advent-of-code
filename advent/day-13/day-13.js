@@ -16,7 +16,7 @@ const partOne = () => {
 const partTwo = async () => {
     const input = getInput(2);
     await intCodeComp(input);
-    console.log('Score:, ', score);
+    console.log('Score: ', score);
     console.log('Program finished (part 2)');
 };
 
@@ -182,13 +182,7 @@ const getJoystickInput = () => {
     const ball = flatTiles.find(o => o.id === 4);
     const paddle = flatTiles.find(o => o.id === 3);
 
-    if (ball.x > paddle.x) {
-        return 1;
-    } else if (ball.x < paddle.x) {
-        return -1;
-    } else {
-        return 0;
-    }
+    return Math.sign(ball.x - paddle.x);
 };
 
 module.exports = {
