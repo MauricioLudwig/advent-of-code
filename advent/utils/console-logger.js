@@ -12,6 +12,10 @@ const danger = (...args) => {
   console.log(chalk.red(generateLog(...args)));
 };
 
+const done = (...args) => {
+  console.log(chalk.blue(generateLog(...args)));
+};
+
 const generateLog = (message, source, param) => {
   let str = message;
 
@@ -29,5 +33,6 @@ const generateLog = (message, source, param) => {
 module.exports = {
   success,
   warning,
-  danger
+  danger,
+  done
 };
