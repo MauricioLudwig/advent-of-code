@@ -1,3 +1,4 @@
+const chalk = require('chalk');
 const puzzleInput = require('./input');
 
 let x = 0;
@@ -95,23 +96,23 @@ const partOne = () => {
 
 const partTwo = () => {
     const panels = partOne();
-    let canvas = [];
+    let canvas = '';
 
-    for (let i = -10; i < 5; i++) {
+    for (let i = 5; i >= -10; i--) {
         let row = '';
         for (let z = 0; z < 50; z++) {
             const panel = panels.find(({ x, y }) => x === z && y === i);
             if (panel) {
-                row += panel.coating === 1 ? '█' : ' ';
+                row += panel.coating === 1 ? chalk.bgRedBright(' ') : ' ';
             } else {
                 row += ' ';
             }
         }
-        canvas.push(row);
+        canvas += `${row}\n`;
     }
 
-    console.log('canvas', canvas);
-}
+    console.log(canvas);
+};
 
 const calculateDirection = (value) => {
     switch (direction) {
