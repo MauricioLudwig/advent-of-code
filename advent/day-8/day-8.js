@@ -1,49 +1,53 @@
-const fs = require('fs');
-const {
-    input,
-    fixture1,
-    fixture2
-} = require('./input');
+const chalk = require('chalk');
+const { done } = require('../utils/console-logger');
+const { input } = require('./input');
 
 const parseInput = () => input.split('').map(Number);
 
-const partOne = (wide, tall) => {
-    let imgPass = parseInput();
-    let layers = generateLayers(imgPass, wide, tall)
-        .map(o => o.reduce((a, b) => a.concat(b)));
+const partOne = () => {
+    const image = parseInput();
+    const [layerLeastZeros] = generateLayers(image)
+        .map(o => o.reduce((a, b) => a.concat(b)))
+        .sort(sortArrByLeastZeros);
 
-    const [layerLeastZeros] = Array.from(layers).sort(sortArrByLeastZeros);
     const ones = layerLeastZeros.filter(o => o === 1).length;
     const twos = layerLeastZeros.filter(o => o === 2).length;
-    return ones * twos;
+
+    done('Program finished', 'Part 1', ones * twos);
 };
 
-const partTwo = (wide, tall) => {
-    let imgPass = parseInput();
-    let layers = generateLayers(imgPass, wide, tall)
+const partTwo = () => {
+    const image = parseInput();
+    const layers = generateLayers(image)
         .map(o => o.reduce((a, b) => a.concat(b)));
-    let img = [];
+    let decodedImage = [];
 
-    for (let i = 0; i < layers[0].length; i++) {
-        for (let y = 0; y < layers.length; y++) {
+    for (let i = 0; lenI = layers[0].length, i < lenI; i++) {
+        for (let y = 0; lenY = layers.length, y < lenY; y++) {
             const digit = layers[y][i];
             if (digit === 0 || digit === 1) {
-                img.push(digit);
+                decodedImage.push(digit);
                 break;
             }
         }
     }
 
-    writeToFile(generateLayers(img, wide, tall)); // contains only 1 layer
+    const [messageArr] = generateLayers(decodedImage);
+    let output = '';
+
+    for (let i = 0; lenI = messageArr.length, i < lenI; i++) {
+        let row = '';
+        for (let y = 0; y < messageArr[i].length; y++) {
+            row += messageArr[i][y] === 1 ? chalk.bgRedBright(' ') : ' ';
+        }
+        output += `${row}\n`;
+    }
+
+    console.log(output);
+    done('Program finished', 'Part 2');
 };
 
-const writeToFile = (img) => {
-    fs.writeFile('output.txt', img, () => {
-        console.log('success!');
-    });
-};
-
-const generateLayers = (arr, wide, tall) => {
+const generateLayers = (arr, wide = 25, tall = 6) => {
     let layers = [];
 
     while (arr.length > 0) {
@@ -59,8 +63,7 @@ const generateLayers = (arr, wide, tall) => {
     return layers;
 };
 
-const sortArrByLeastZeros = (a, b) =>
-    a.filter(o => o === 0).length - b.filter(o => o === 0).length;
+const sortArrByLeastZeros = (a, b) => a.filter(o => o === 0).length - b.filter(o => o === 0).length;
 
 module.exports = {
     partOne,
