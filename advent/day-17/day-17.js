@@ -1,25 +1,75 @@
-const input = require('./input');
+const { done } = require('../utils/console-logger');
+const puzzleInput = require('./input');
 
-const day17 = () => {
-    let map = [];
+const partOne = () => {
+    const { grid } = intCode(puzzleInput());
+
+    let intersections = [];
+
+    for (let i = 1; i < grid.length - 1; i++) {
+        for (let y = 1; y < grid[i].length - 1; y++) {
+            if (grid[i][y] === '#' && grid[i - 1][y] === '#' && grid[i + 1][y] === '#' && grid[i][y - 1] === '#' && grid[i][y + 1] === '#') {
+                intersections.push({ i, y });
+            }
+        }
+    }
+
+    const intersectionSum = intersections.reduce((acc, { i, y }) => {
+        return acc += i * y;
+    }, 0);
+
+    done('Program finished', 'Part 1', intersectionSum);
+};
+
+const partTwo = () => {
+    const routine = [ // manual calculation
+        'A,A,B,C,B,C,B,C,A,C', // Main
+        'R,6,L,8,R,8', // A
+        'R,4,R,6,R,6,R,4,R,4', // B
+        'L,8,R,6,L,10,L,10', // C
+    ];
+
+    let routineAsAscii = routine.map(o => {
+        let numbers = o.split(',').map(x => {
+            let number = [];
+            switch (x) {
+                case '10':
+                    number.push(49, 48);
+                    break;
+                default:
+                    number.push(x.charCodeAt(0));
+                    break;
+            }
+            return [...number, 44]; // 44 = ,
+        }).flat();
+        numbers.pop(); // remove last comma
+        return [...numbers, 10]; // 10 = \n
+    }).flat();
+
+    const continousFeed = true;
+    routineAsAscii.push(continousFeed ? 121 : 110);
+    routineAsAscii.push(10);
+
+    const { outputArr } = intCode(puzzleInput(2), Array.from(routineAsAscii));
+
+    done('Program finished', 'Part 2', outputArr.pop());
+};
+
+const intCode = (input, userInput) => {
+    let grid = [];
     let row = [];
     let terminate = false;
     let relativeBase = 0;
+    const outputArr = [];
 
-    const calcOutput = (output) => {
-        switch (output) {
+    const convertToAscii = (text) => {
+        switch (text) {
             case 10:
-                map.push([...row]);
+                grid.push([...row]);
                 row = [];
                 break;
-            case 35:
-                row.push('#')
-                break;
-            case 46:
-                row.push('.');
-                break;
             default:
-                console.log('Something went wrong (calcOutput)', output);
+                row.push(String.fromCharCode(text));
                 break;
         }
     };
@@ -50,11 +100,12 @@ const day17 = () => {
                 i += 4;
                 break;
             case '03':
-                input[mode1 == 0 ? param1 : param1 + relativeBase] = userInput;
+                input[mode1 == 0 ? param1 : param1 + relativeBase] = userInput.shift();
                 i += 2;
                 break;
             case '04':
-                calcOutput(val1);
+                outputArr.push(val1);
+                convertToAscii(val1);
                 i += 2;
                 break;
             case '05':
@@ -90,22 +141,24 @@ const day17 = () => {
         }
     }
 
-    let intersections = [];
-
-    for (let i = 1; i < map.length - 1; i++) {
-        for (let y = 1; y < map[i].length - 1; y++) {
-            if (map[i][y] === '#' && map[i - 1][y] === '#' && map[i + 1][y] === '#' && map[i][y - 1] === '#' && map[i][y + 1] === '#') {
-                intersections.push({ i, y });
-            }
-        }
-    }
-
-    const intersectionSum = intersections.reduce((acc, { i, y }) => {
-        return acc += i * y;
-    }, 0);
-
-    console.log('intersectionSum', intersectionSum);
-    console.log('Program finished');
+    return { grid, outputArr };
 };
 
-module.exports = day17;
+const printMap = (grid) => {
+    let output = '';
+
+    for (let i = 0; len = grid.length, i < len; i++) {
+        let row = '';
+        for (let y = 0; y < grid[i].length; y++) {
+            row += grid[i][y];
+        }
+        output += `${row}\n`;
+    }
+
+    console.log(output);
+};
+
+module.exports = {
+    partOne,
+    partTwo
+};
