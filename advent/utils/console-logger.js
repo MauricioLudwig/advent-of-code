@@ -1,7 +1,7 @@
 const chalk = require('chalk');
 
 const success = (...args) => {
-  console.log(chalk.green(generateLog(...args)));
+  console.log(chalk.magenta(generateLog(...args)));
 };
 
 const warning = (...args) => {
