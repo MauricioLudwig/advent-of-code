@@ -1,6 +1,6 @@
 const inquirer = require('inquirer');
 const chalk = require('chalk');
-const { success, danger, done } = require('../utils/console-logger');
+const { success, danger, done } = require('../../utils/console-logger');
 const puzzleInput = require('./input');
 
 const INTCODE_STATUS = {

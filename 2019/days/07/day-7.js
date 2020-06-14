@@ -1,4 +1,4 @@
-const { done } = require('../utils/console-logger');
+const { done } = require('../../utils/console-logger');
 const {
     input,
     part1,

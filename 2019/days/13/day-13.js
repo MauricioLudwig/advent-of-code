@@ -1,5 +1,6 @@
 const chalk = require('chalk');
 const logUpdate = require('log-update');
+const { sleep } = require('../../utils/helper-functions');
 const getInput = require('./input');
 
 let tiles = {};
@@ -174,8 +175,6 @@ const renderBoard = async () => {
     logUpdate(`${str}${scoreGUI}`);
     await sleep();
 };
-
-const sleep = (ms = 25) => new Promise(resolve => setTimeout(resolve, ms));
 
 const getJoystickInput = () => {
     const flatTiles = Object.values(tiles).flat();

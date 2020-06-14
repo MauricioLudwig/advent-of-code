@@ -1,5 +1,5 @@
 const chalk = require('chalk');
-const { done } = require('../utils/console-logger');
+const { done } = require('../../utils/console-logger');
 const { input } = require('./input');
 
 const parseInput = () => input.split('').map(Number);

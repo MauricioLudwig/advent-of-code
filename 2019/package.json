@@ -12,13 +12,13 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "cross-env": "^6.0.3",
-    "jest": "^24.9.0",
-    "nodemon": "^2.0.1"
+    "cross-env": "^7.0.2",
+    "jest": "^26.0.1",
+    "nodemon": "^2.0.4"
   },
   "dependencies": {
-    "chalk": "^3.0.0",
-    "inquirer": "^7.0.4",
-    "log-update": "^3.3.0"
+    "chalk": "^4.1.0",
+    "inquirer": "^7.1.0",
+    "log-update": "^4.0.0"
   }
 }

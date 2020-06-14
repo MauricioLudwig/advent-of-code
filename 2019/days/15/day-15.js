@@ -1,7 +1,7 @@
 const chalk = require('chalk');
 const logUpdate = require('log-update');
-const { done, success, danger } = require('../utils/console-logger');
-const { sleep } = require('../utils/utils');
+const { done, success, danger } = require('../../utils/console-logger');
+const { sleep } = require('../../utils/helper-functions');
 const getInput = require('./input');
 
 let position = { x: 0, y: 0 };

@@ -1,4 +1,4 @@
-const { done, success } = require('../utils/console-logger');
+const { done, success } = require('../../utils/console-logger');
 const puzzleInput = require('./input');
 
 const day23 = () => {

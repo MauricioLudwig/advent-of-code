@@ -1,5 +1,5 @@
 const chalk = require('chalk');
-const { success, done } = require('../utils/console-logger');
+const { success, done } = require('../../utils/console-logger');
 const puzzleInput = require('./input');
 
 const partOne = () => {
