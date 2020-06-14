@@ -1,5 +1,5 @@
 import { getAsNumbersArray } from '../input/index.js';
-import { success } from '../utils/logger.js';
+import { success, end } from '../utils/logger.js';
 
 export default () => {
   const input = getAsNumbersArray('01.txt');
@@ -27,4 +27,5 @@ export default () => {
   };
 
   success(`Part 2: ${currentFreq}`);
+  end();
 };
