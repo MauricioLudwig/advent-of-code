@@ -3,6 +3,10 @@ import path from 'path';
 
 const getFilePath = fileName => path.resolve(`./input/files/${fileName}`);
 
+export const getAsSingleLine = fileName => fs
+  .readFileSync(getFilePath(fileName))
+  .toString();
+
 export const getAsArray = fileName => fs
   .readFileSync(getFilePath(fileName))
   .toString()
