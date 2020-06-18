@@ -2,7 +2,7 @@
 My solutions for the annual Advent of Code challenge.
 
 
-### Technologies used
+### Tech stack
 
 2019
 - Node.js
