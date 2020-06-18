@@ -19,7 +19,7 @@ const getMetadataEntriesSum = (nodes, metadataEntriesSum) => {
   const [childNodesCount, metadataEntriesCount] = nodes.splice(0, 2);
 
   if (childNodesCount === 0) {
-    return metadataEntriesSum += nodes.splice(0, metadataEntriesCount).reduce((acc, curr) => acc + curr, 0);
+    return nodes.splice(0, metadataEntriesCount).reduce((acc, curr) => acc + curr, 0);
   } else {
     let childMetadataEntriesSum = 0;
 
