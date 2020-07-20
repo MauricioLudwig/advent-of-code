@@ -6,3 +6,10 @@ const getFilePath = (fileName: string): string =>
 
 export const getAsSingleLine = (fileName: string): string =>
   fs.readFileSync(getFilePath(fileName)).toString();
+
+export const getAsArray = (fileName: string): string[] =>
+  fs
+    .readFileSync(getFilePath(fileName))
+    .toString()
+    .split('\n')
+    .map((o) => o.replace('\r', ''));
