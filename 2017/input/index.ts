@@ -13,3 +13,6 @@ export const getAsArray = (fileName: string): string[] =>
     .toString()
     .split('\n')
     .map((o) => o.replace('\r', ''));
+
+export const getAsNumbersArray = (fileName: string) =>
+  fs.readFileSync(getFilePath(fileName)).toString().split('\n').map(Number);
