@@ -1,9 +1,9 @@
 import { getAsSingleLine } from '../input';
 import { success, end } from '../utils/logger';
 
-export default () => {
+export default (): void => {
   const input = getAsSingleLine('06.txt').split('\t').map(Number);
-  const bankCombinations: string[] = [input.join('')];
+  const bankCombinations = [input.join('')];
 
   let steps = 0;
   let cycles = 0;
@@ -27,7 +27,7 @@ export default () => {
     const newCombination = input.join('');
     steps++;
 
-    if (bankCombinations.some((o) => o === newCombination)) {
+    if (bankCombinations.some((o): boolean => o === newCombination)) {
       cycles = steps - bankCombinations.indexOf(newCombination);
       break;
     }

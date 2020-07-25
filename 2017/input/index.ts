@@ -14,5 +14,5 @@ export const getAsArray = (fileName: string): string[] =>
     .split('\n')
     .map((o) => o.replace('\r', ''));
 
-export const getAsNumbersArray = (fileName: string) =>
+export const getAsNumbersArray = (fileName: string): number[] =>
   fs.readFileSync(getFilePath(fileName)).toString().split('\n').map(Number);

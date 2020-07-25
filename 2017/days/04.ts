@@ -1,10 +1,10 @@
 import { getAsArray } from '../input';
 import { success, end } from '../utils/logger';
 
-export default () => {
+export default (): void => {
   const input = getAsArray('04.txt');
 
-  const validPassphrases1 = input.reduce((acc, curr) => {
+  const validPassphrases1 = input.reduce((acc, curr): number => {
     const words = curr.split(' ');
 
     if (new Set(words).size === words.length) {
@@ -16,12 +16,12 @@ export default () => {
 
   success(`Part 1: ${validPassphrases1}`);
 
-  const validPassphrases2 = input.reduce((acc, curr) => {
+  const validPassphrases2 = input.reduce((acc, curr): number => {
     const words = curr.split(' ');
 
-    const duplicates = words.some((word1, index1) => {
+    const duplicates = words.some((word1, index1): boolean => {
       const sortedWord1 = word1.split('').sort().join('');
-      return words.some((word2, index2) => {
+      return words.some((word2, index2): boolean => {
         const sortedWord2 = word2.split('').sort().join('');
         return index1 !== index2 && sortedWord1 === sortedWord2;
       });

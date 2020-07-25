@@ -15,31 +15,42 @@ enum Condition {
   LessOrEq = '<=',
 }
 
-interface RegisterObj {
+interface Register {
   [key: string]: number;
 }
 
-export default () => {
+interface Instruction {
+  receiver: string;
+  operation: Operation;
+  quantity: number;
+  arg1: string;
+  condition: string;
+  arg2: number;
+}
+
+export default (): void => {
   const input = getAsArray('08.txt');
 
-  const instructions = input.map((o) => {
-    const [, receiver, operation, quantity, arg1, condition, arg2] =
-      o.match(/(\w+) (inc|dec) (-?\d+) if (\w+) (\W+) (-?\d+)/) ?? [];
+  const instructions = input.map(
+    (o): Instruction => {
+      const [, receiver, operation, quantity, arg1, condition, arg2] =
+        o.match(/(\w+) (inc|dec) (-?\d+) if (\w+) (\W+) (-?\d+)/) ?? [];
 
-    return {
-      receiver,
-      operation: operation === 'inc' ? Operation.inc : Operation.dec,
-      quantity: parseInt(quantity, 10),
-      arg1,
-      condition,
-      arg2: parseInt(arg2, 10),
-    };
-  });
+      return {
+        receiver,
+        operation: operation === 'inc' ? Operation.inc : Operation.dec,
+        quantity: parseInt(quantity, 10),
+        arg1,
+        condition,
+        arg2: parseInt(arg2, 10),
+      };
+    }
+  );
 
   let absMaxValue = 0;
-  const registers: RegisterObj = {};
+  const registers: Register = {};
 
-  instructions.forEach((o) => {
+  instructions.forEach((o): void => {
     const { receiver, operation, quantity, arg1, condition, arg2 } = o;
 
     if (checkInstruction(registers[arg1], condition, arg2)) {
@@ -65,7 +76,11 @@ export default () => {
   end();
 };
 
-const checkInstruction = (arg1 = 0, condition: string, arg2: number) => {
+const checkInstruction = (
+  arg1 = 0,
+  condition: string,
+  arg2: number
+): boolean => {
   switch (condition) {
     case Condition.Less:
       return arg1 < arg2;
@@ -84,5 +99,5 @@ const checkInstruction = (arg1 = 0, condition: string, arg2: number) => {
   }
 };
 
-const calcHighestValue = (numbers: number[]) =>
-  numbers.sort((a, b) => b - a)[0] ?? 0;
+const calcHighestValue = (numbers: number[]): number =>
+  numbers.sort((a, b): number => b - a)[0] ?? 0;

@@ -23,7 +23,7 @@ const ccRotation = [
   Direction.Down,
 ];
 
-export default () => {
+export default (): void => {
   const input = 347991;
 
   const grid: Grid = {};
@@ -86,9 +86,10 @@ export default () => {
   end();
 };
 
-const calcManhattanDistance = ({ x, y }: Position) => Math.abs(y) + Math.abs(x);
+const calcManhattanDistance = ({ x, y }: Position): number =>
+  Math.abs(y) + Math.abs(x);
 
-const calcAdjacentTilesSum = (grid: Grid, x: number, y: number) => {
+const calcAdjacentTilesSum = (grid: Grid, x: number, y: number): number => {
   return (
     (grid[getKey(y + 1, x - 1)] ?? 0) +
     (grid[getKey(y + 1, x)] ?? 0) +
@@ -101,4 +102,4 @@ const calcAdjacentTilesSum = (grid: Grid, x: number, y: number) => {
   );
 };
 
-const getKey = (y: number, x: number) => `${y},${x}`;
+const getKey = (y: number, x: number): string => `${y},${x}`;
