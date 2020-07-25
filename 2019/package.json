@@ -1,0 +1,24 @@
+{
+  "name": "advent-code",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "test": "cross-env MODE=test jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "cross-env": "^7.0.2",
+    "jest": "^26.0.1",
+    "nodemon": "^2.0.4"
+  },
+  "dependencies": {
+    "chalk": "^4.1.0",
+    "inquirer": "^7.1.0",
+    "log-update": "^4.0.0"
+  }
+}
