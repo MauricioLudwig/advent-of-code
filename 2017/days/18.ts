@@ -1,23 +1,25 @@
 import { getAsArray } from '../input';
 import { success, end } from '../utils/logger';
 
-enum Operation {
+export enum Operation {
   snd = 'snd',
   set = 'set',
   add = 'add',
+  sub = 'sub',
   mul = 'mul',
   mod = 'mod',
   rcv = 'rcv',
   jgz = 'jgz',
+  jnz = 'jnz',
 }
 
-interface Instruction {
+export interface Instruction {
   operation: string;
   x: string;
   y?: string;
 }
 
-interface Register {
+export interface Register {
   [key: string]: number;
 }
 
@@ -67,7 +69,7 @@ type Run = (
   register: Register
 ) => [number, number | null, boolean];
 
-const run: Run = ({ operation, x, y }, register) => {
+export const run: Run = ({ operation, x, y }, register) => {
   let offset = 0;
   let sound: number | null = null;
   let recover = false;
@@ -88,6 +90,9 @@ const run: Run = ({ operation, x, y }, register) => {
     case Operation.add:
       register[x] += n;
       break;
+    case Operation.sub:
+      register[x] -= n;
+      break;
     case Operation.mul:
       register[x] *= n;
       break;
@@ -101,6 +106,11 @@ const run: Run = ({ operation, x, y }, register) => {
       break;
     case Operation.jgz:
       if ((isNaN(x as any) ? register[x] : parseInt(x, 10)) > 0) {
+        offset = n;
+      }
+      break;
+    case Operation.jnz:
+      if (isNaN(x as any) ? register[x] : parseInt(x, 10) !== 0) {
         offset = n;
       }
       break;
