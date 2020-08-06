@@ -9,14 +9,14 @@ export const compareArrayEquality = <T>(arr1: T[], arr2: T[]): boolean => {
   return arr1.length === arr2.length && arr1.every((o, i) => o === arr2[i]);
 };
 
-export interface Grid {
+export interface IGrid {
   [key: string]: {
     [key: string]: string;
   };
 }
 
 type DrawGrid = (
-  grid: Grid,
+  grid: IGrid,
   defaultValue: string,
   node?: { x: number; y: number },
   index?: number

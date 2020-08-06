@@ -1,10 +1,12 @@
 import { getAsArray } from '../input';
-import { Grid } from '../utils/helper-functions';
+import { IGrid, drawGrid } from '../utils/helper-functions';
 import { success, end } from '../utils/logger';
 
 enum Node {
   CLEAN = '.',
   INFECTED = '#',
+  WEAKENED = 'W',
+  FLAGGED = 'F',
 }
 
 enum Direction {
@@ -28,10 +30,82 @@ const rightRotation = [
   Direction.LEFT,
 ];
 
+class Grid {
+  direction = Direction.UP;
+  infections = 0;
+
+  constructor(public grid: IGrid, public x: number, public y: number) {}
+
+  get position(): number[] {
+    return [this.x, this.y];
+  }
+
+  get node(): string {
+    if (!Object.prototype.hasOwnProperty.call(this.grid, this.y)) {
+      this.grid[this.y] = {};
+    }
+
+    return this.grid[this.y][this.x];
+  }
+
+  setNode(n: Node): void {
+    this.grid[this.y][this.x] = n;
+  }
+
+  changeDirection(): void {
+    let index = 0;
+
+    switch (this.node) {
+      case Node.WEAKENED:
+        break;
+      case Node.INFECTED:
+        index = rightRotation.indexOf(this.direction);
+        this.direction = rightRotation[(index + 1) % rightRotation.length];
+        break;
+      case Node.FLAGGED:
+        index = leftRotation.indexOf(this.direction);
+        this.direction = leftRotation[(index + 2) % leftRotation.length];
+        break;
+      case Node.CLEAN:
+      default:
+        index = leftRotation.indexOf(this.direction);
+        this.direction = leftRotation[(index + 1) % leftRotation.length];
+        break;
+    }
+  }
+
+  advance(): void {
+    switch (this.direction) {
+      case Direction.UP:
+        this.y += -1;
+        break;
+      case Direction.RIGHT:
+        this.x += 1;
+        break;
+      case Direction.DOWN:
+        this.y += 1;
+        break;
+      case Direction.LEFT:
+        this.x += -1;
+        break;
+      default:
+        throw new Error(`No case matched: ${this.direction}`);
+    }
+  }
+
+  print(): void {
+    drawGrid(this.grid, '.', {
+      x: this.x,
+      y: this.y,
+    });
+  }
+}
+
 export default () => {
   const input = getAsArray('22.txt').map((o): string[] => o.split(''));
+  const origin = Math.round(input.length / 2) - 1;
 
-  const grid: Grid = input.reduce((colAcc, colcurr, colIndex) => {
+  const grid: IGrid = input.reduce((colAcc, colcurr, colIndex) => {
     const row = colcurr.reduce((rowAcc, rowCurr, rowIndex) => {
       return {
         ...rowAcc,
@@ -45,48 +119,56 @@ export default () => {
     };
   }, {});
 
-  const burst = 10000;
-  let direction = Direction.UP;
-  const origin = Math.round(input.length / 2) - 1;
-  let position = [origin, origin];
-  let infections = 0;
+  const grid1 = new Grid(
+    JSON.parse(JSON.stringify(grid)) as IGrid,
+    origin,
+    origin
+  );
+  const grid2 = new Grid(
+    JSON.parse(JSON.stringify(grid)) as IGrid,
+    origin,
+    origin
+  );
 
-  for (let i = 0; i < burst; i++) {
-    const [x, y] = position;
+  for (let i = 0; i < 10000; i++) {
+    grid1.changeDirection();
 
-    if (!Object.prototype.hasOwnProperty.call(grid, y)) {
-      grid[y] = {};
-    }
-
-    if (grid[y][x] === Node.INFECTED) {
-      const index = rightRotation.indexOf(direction);
-      direction = rightRotation[(index + 1) % rightRotation.length];
-      grid[y][x] = Node.CLEAN;
+    if (grid1.node === Node.INFECTED) {
+      grid1.setNode(Node.CLEAN);
     } else {
-      const index = leftRotation.indexOf(direction);
-      direction = leftRotation[(index + 1) % leftRotation.length];
-      grid[y][x] = Node.INFECTED;
-      infections++;
+      grid1.setNode(Node.INFECTED);
+      grid1.infections++;
     }
 
-    switch (direction) {
-      case Direction.UP:
-        position[1] += -1;
-        break;
-      case Direction.RIGHT:
-        position[0] += 1;
-        break;
-      case Direction.DOWN:
-        position[1] += 1;
-        break;
-      case Direction.LEFT:
-        position[0] += -1;
-        break;
-      default:
-        throw new Error(`No case matched: ${direction}`);
-    }
+    grid1.advance();
   }
 
-  success(`Part 1: ${infections}`);
+  success(`Part 1: ${grid1.infections}`);
+
+  for (let i = 0; i < 10e6; i++) {
+    grid2.changeDirection();
+
+    switch (grid2.node) {
+      case Node.WEAKENED:
+        grid2.setNode(Node.INFECTED);
+        grid2.infections++;
+        break;
+      case Node.INFECTED:
+        grid2.setNode(Node.FLAGGED);
+        break;
+      case Node.FLAGGED:
+        grid2.setNode(Node.CLEAN);
+        break;
+      case Node.CLEAN:
+      default:
+        grid2.setNode(Node.WEAKENED);
+        break;
+    }
+
+    grid2.advance();
+  }
+
+  success(`Part 2: ${grid2.infections}`);
+
   end();
 };
