@@ -101,7 +101,7 @@ class Grid {
   }
 }
 
-export default () => {
+export default (): void => {
   const input = getAsArray('22.txt').map((o): string[] => o.split(''));
   const origin = Math.round(input.length / 2) - 1;
 
