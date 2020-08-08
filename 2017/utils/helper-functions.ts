@@ -1,5 +1,8 @@
 import chalk from 'chalk';
 
+export const sleep = (ms = 1000) =>
+  new Promise((resolve) => setTimeout(resolve, ms));
+
 export const compareSetEquality = <T>(set1: Set<T>, set2: Set<T>): boolean => {
   const mergedSets = new Set([...Array.from(set1), ...Array.from(set2)]);
   return set1.size === mergedSets.size;
