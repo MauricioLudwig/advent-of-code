@@ -18,6 +18,7 @@
     "typescript": "^3.9.7"
   },
   "dependencies": {
-    "chalk": "^4.1.0"
+    "chalk": "^4.1.0",
+    "log-update": "^4.0.0"
   }
 }
