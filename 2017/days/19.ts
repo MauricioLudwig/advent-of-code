@@ -30,7 +30,7 @@ export default async (): Promise<void> => {
   let direction = Direction.DOWN;
   let step = 0;
   let loop = true;
-  const PRINT = true; // set to true to print network and pathing to the console
+  const PRINT = false; // set to true to print network and pathing to the console
 
   while (loop) {
     step++;
