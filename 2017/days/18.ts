@@ -1,7 +1,7 @@
 import { getAsArray } from '../input';
 import { success, end } from '../utils/logger';
 
-enum Operation {
+export enum Operation {
   snd = 'snd',
   set = 'set',
   add = 'add',
