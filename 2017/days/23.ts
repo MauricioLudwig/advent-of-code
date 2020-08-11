@@ -1,12 +1,10 @@
 import { getAsArray } from '../input';
 import { success, end } from '../utils/logger';
-import { Operation, Instruction, Register, run } from './18';
+import { IInstruction, IRegister, Operation, Program } from './18';
 
 export default (): void => {
-  const input = getAsArray('23.txt');
-
-  const instructions = input.map(
-    (o): Instruction => {
+  const instructions: IInstruction[] = getAsArray('23.txt').map(
+    (o): IInstruction => {
       const [operation, x, y] = o.split(' ');
       return {
         operation,
@@ -16,29 +14,23 @@ export default (): void => {
     }
   );
 
-  const register: Register = 'abcdefgh'.split('').reduce((acc, curr) => {
+  const register: IRegister = 'abcdefgh'.split('').reduce((acc, curr) => {
     return {
       ...acc,
       [curr]: 0,
     };
   }, {});
 
-  let mulInstructions = 0;
+  const program = new Program({ ...register });
 
-  for (let i = 0; i < instructions.length; ) {
-    if (instructions[i].operation === Operation.mul) {
-      mulInstructions++;
-    }
+  while (true) {
+    program.run2(instructions);
 
-    const [offset, , recover] = run(instructions[i], register);
-
-    if (recover) {
+    if (program.index > instructions.length - 1) {
       break;
     }
-
-    i += offset === 0 ? 1 : offset;
   }
 
-  success(`Part 1: ${mulInstructions}`);
+  success(`Part 1: ${program.operationsInvoked[Operation.mul]}`);
   end();
 };
