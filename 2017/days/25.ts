@@ -46,6 +46,6 @@ export default (): void => {
     turingMachine.run();
   }
 
-  success(`Part 1: ${turingMachine.checksum}`);
+  success(`Merry Christmas! ${turingMachine.checksum}`);
   end();
 };
