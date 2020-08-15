@@ -1,40 +1,44 @@
-import { getAsArray } from '../input/index.js';
-import { success, end } from '../utils/logger.js';
+import { getAsArray } from '../input';
+import { success, end } from '../utils/logger';
 
-export default () => {
+interface ILetters {
+  [key: string]: number;
+}
+
+export default (): void => {
   const input = getAsArray('02.txt');
   const inputLen = input.length;
 
-  // Part 1
-  let thrice = 0;
   let twice = 0;
+  let thrice = 0;
 
-  input.forEach(str => {
-    const letters = {};
+  input.forEach((str): void => {
+    const letters: ILetters = {};
 
-    Array.from(str).forEach(char => {
-      if (letters.hasOwnProperty(char)) {
-        letters[char] = letters[char] + 1;
+    Array.from(str).forEach((c): void => {
+      if (letters.hasOwnProperty(c)) {
+        letters[c] += 1;
       } else {
-        letters[char] = 1;
+        letters[c] = 1;
       }
     });
 
     const lettersCount = Object.values(letters);
 
-    if (lettersCount.some(l => l === 2)) {
+    if (lettersCount.some((l) => l === 2)) {
       twice++;
     }
 
-    if (lettersCount.some(l => l === 3)) {
+    if (lettersCount.some((l) => l === 3)) {
       thrice++;
     }
   });
 
-  const checkSum = thrice * twice;
+  const checkSum = twice * thrice;
   success(`Part 1: ${checkSum}`);
 
-  // Part 2
+  end();
+
   for (let i = 0; i < inputLen; i++) {
     const currentStr = input[i];
 
@@ -58,7 +62,9 @@ export default () => {
 
       if (diff === 1) {
         const boxId = Array.from(currentStr)
-          .map((curr, index) => currentStr[index] === checkStr[index] ? curr : '')
+          .map((curr, index): string => {
+            return currentStr[index] === checkStr[index] ? curr : '';
+          })
           .join('');
 
         success(`Part 2: ${boxId}`);

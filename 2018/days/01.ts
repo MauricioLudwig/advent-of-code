@@ -1,17 +1,17 @@
-import { getAsNumbersArray } from '../input/index.js';
-import { success, end } from '../utils/logger.js';
+import { performance } from 'perf_hooks';
+import { getAsNumbersArray } from '../input';
+import { success, end, logPerformance } from '../utils/logger';
 
-export default () => {
+export default (): void => {
   const input = getAsNumbersArray('01.txt');
 
-  // Part 1
-  const freqSum = input.reduce((acc, curr) => acc + curr, 0);
+  const freqSum = input.reduce((acc, curr): number => acc + curr, 0);
   success(`Part 1: ${freqSum}`);
 
-  // Part 2
   let loop = true;
   let currentFreq = 0;
-  const frequencies = [];
+  const frequencies: number[] = [];
+  const t1 = performance.now();
 
   while (loop) {
     for (let i = 0; i < input.length; i++) {
@@ -23,9 +23,13 @@ export default () => {
       }
 
       frequencies.push(currentFreq);
-    };
-  };
+    }
+  }
 
+  const t2 = performance.now();
+
+  logPerformance(t2, t1);
   success(`Part 2: ${currentFreq}`);
+
   end();
 };

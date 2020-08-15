@@ -14,7 +14,7 @@ Node.js + JavaScript
 
 ### 2018
 
-Node.js + JavaScript
+Node.js + TypeScript
 
 ### 2017
 
