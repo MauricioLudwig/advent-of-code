@@ -1,78 +1,94 @@
-import { getAsArray } from '../input/index.js';
-import { success, end } from '../utils/logger.js';
+import { getAsArray } from '../input';
+import { success, end } from '../utils/logger';
 
-const OPCODE_INSTRUCTION = {
+interface IInstruction {
+  [key: string]: {
+    label: string;
+    value: null | number;
+  };
+}
+
+const OPCODE_INSTRUCTION: IInstruction = {
   addr: {
     label: 'addr',
-    value: null
+    value: null,
   },
   addi: {
     label: 'addi',
-    value: null
+    value: null,
   },
   mulr: {
     label: 'mulr',
-    value: null
+    value: null,
   },
   muli: {
     label: 'muli',
-    value: null
+    value: null,
   },
   banr: {
     label: 'banr',
-    value: null
+    value: null,
   },
   bani: {
     label: 'bani',
-    value: null
+    value: null,
   },
   borr: {
     label: 'borr',
-    value: null
+    value: null,
   },
   bori: {
     label: 'bori',
-    value: null
+    value: null,
   },
   setr: {
     label: 'setr',
-    value: null
+    value: null,
   },
   seti: {
     label: 'seti',
-    value: null
+    value: null,
   },
   gtir: {
     label: 'gtir',
-    value: null
+    value: null,
   },
   gtri: {
     label: 'gtri',
-    value: null
+    value: null,
   },
   gtrr: {
     label: 'gtrr',
-    value: null
+    value: null,
   },
   eqir: {
     label: 'eqir',
-    value: null
+    value: null,
   },
   eqri: {
     label: 'eqri',
-    value: null
+    value: null,
   },
   eqrr: {
     label: 'eqrr',
-    value: null
-  }
+    value: null,
+  },
 };
 
-export default () => {
-  const inputA = getAsArray('16A.txt').filter(o => o !== '');
-  const inputB = getAsArray('16B.txt').map(o => extractDigitsFromString(o));
+interface IOpcode {
+  before: number[];
+  instruction: number[];
+  after: number[];
+  operations: string[];
+}
 
-  const opcodes = [];
+export default (): void => {
+  const inputA = getAsArray('16A.txt').filter((o) => o !== '');
+  const inputB = getAsArray('16B.txt').map((o): number[] =>
+    extractDigitsFromString(o)
+  );
+
+  const opcodes: IOpcode[] = [];
 
   while (inputA.length !== 0) {
     const [beforeStr, instructionStr, afterStr] = inputA.splice(0, 3);
@@ -81,13 +97,17 @@ export default () => {
       before: extractDigitsFromString(beforeStr),
       instruction: extractDigitsFromString(instructionStr),
       after: extractDigitsFromString(afterStr),
-      operations: []
+      operations: [],
     });
   }
 
-  opcodes.forEach(opcode => {
-    Object.values(OPCODE_INSTRUCTION).forEach(opcodeInstruction => {
-      const newAfter = opcodeMachine(opcode.before, opcode.instruction, opcodeInstruction.label);
+  opcodes.forEach((opcode): void => {
+    Object.values(OPCODE_INSTRUCTION).forEach((opcodeInstruction) => {
+      const newAfter = opcodeMachine(
+        opcode.before,
+        opcode.instruction,
+        opcodeInstruction.label
+      );
       const isEqual = newAfter.every((a, i) => a === opcode.after[i]);
 
       if (isEqual) {
@@ -96,33 +116,48 @@ export default () => {
     });
   });
 
-  const opcodeThriceOrMore = opcodes.reduce((acc, curr) => acc + (curr.operations.length >= 3 ? 1 : 0), 0);
+  const opcodeThriceOrMore = opcodes.reduce(
+    (acc, curr) => acc + (curr.operations.length >= 3 ? 1 : 0),
+    0
+  );
   success(`Part 1: ${opcodeThriceOrMore}`);
 
   while (true) {
-    const instructions = Object.values(OPCODE_INSTRUCTION).map(o => o);
+    const instructions = Object.values(OPCODE_INSTRUCTION).map((o) => o);
 
-    if (instructions.every(o => o.value !== null)) {
+    if (instructions.every((o) => o.value !== null)) {
       break;
     }
 
-    const instructionsWithValues = instructions.filter(o => o.value !== null).map(o => o.label);
+    const instructionsWithValues = instructions
+      .filter((o) => o.value !== null)
+      .map((o) => o.label);
 
-    opcodes.filter(o => o.operations.filter(x => !instructionsWithValues.includes(x)).length === 1).forEach(o => {
-      const [opcodeInstruction] = o.instruction;
-      const [operation] = o.operations.filter(o => !instructionsWithValues.includes(o));
+    opcodes
+      .filter(
+        (o) =>
+          o.operations.filter((x) => !instructionsWithValues.includes(x))
+            .length === 1
+      )
+      .forEach((o) => {
+        const [opcodeInstruction] = o.instruction;
+        const [operation] = o.operations.filter(
+          (o) => !instructionsWithValues.includes(o)
+        );
 
-      if (OPCODE_INSTRUCTION[operation].value === null) {
-        OPCODE_INSTRUCTION[operation].value = opcodeInstruction;
-      }
-    });
+        if (OPCODE_INSTRUCTION[operation].value === null) {
+          OPCODE_INSTRUCTION[operation].value = opcodeInstruction;
+        }
+      });
   }
 
   let register = [0, 0, 0, 0];
 
-  inputB.forEach(o => {
+  inputB.forEach((o): void => {
     const [instruction] = o;
-    const opcodeInstruction = Object.values(OPCODE_INSTRUCTION).find(o => o.value === instruction).label;
+    const opcodeInstruction =
+      Object.values(OPCODE_INSTRUCTION).find((o) => o.value === instruction)
+        ?.label ?? '';
     const after = opcodeMachine(register, o, opcodeInstruction);
     register = [...after];
   });
@@ -132,9 +167,13 @@ export default () => {
   end();
 };
 
-const opcodeMachine = (before, instruction, opcodeInstruction) => {
+const opcodeMachine = (
+  before: number[],
+  instruction: number[],
+  opcodeInstruction: string
+): number[] => {
   const after = [...before];
-  const [opcode, A, B, C] = instruction;
+  const [, A, B, C] = instruction;
   let newVal;
 
   switch (opcodeInstruction) {
@@ -194,8 +233,8 @@ const opcodeMachine = (before, instruction, opcodeInstruction) => {
   return after;
 };
 
-const extractDigitsFromString = (str) => {
+const extractDigitsFromString = (str: string): number[] => {
   const pattern = new RegExp(/(\d+)/, 'g');
-  const [...digits] = str.match(pattern);
+  const [...digits] = str.match(pattern) || [];
   return digits.map(Number);
 };

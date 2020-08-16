@@ -1,62 +1,81 @@
 import chalk from 'chalk';
 import logUpdate from 'log-update';
-import { getAsArray } from '../input/index.js';
-import { success, end } from '../utils/logger.js';
-import { sleep } from '../utils/helper-functions.js';
+import { getAsArray } from '../input';
+import { success, end } from '../utils/logger';
+import { sleep } from '../utils/helper-functions';
+
+interface ITurn {
+  [key: string]: string;
+}
 
 const CART_DIRECTION = {
   UP: '^',
   DOWN: 'v',
   LEFT: '<',
-  RIGHT: '>'
+  RIGHT: '>',
 };
 
-const LEFT_TURN = {
+const LEFT_TURN: ITurn = {
   '^': '<',
   '<': 'v',
-  'v': '>',
-  '>': '^'
+  v: '>',
+  '>': '^',
 };
 
-const RIGHT_TURN = {
+const RIGHT_TURN: ITurn = {
   '^': '>',
   '>': 'v',
-  'v': '<',
-  '<': '^'
+  v: '<',
+  '<': '^',
 };
 
-const INTERSECTION_SLASH_TURN = { // /
+const INTERSECTION_SLASH_TURN: ITurn = {
   '>': '^',
-  'v': '<',
+  v: '<',
   '^': '>',
-  '<': 'v'
+  '<': 'v',
 };
 
-const INTERSECTION_BACK_SLASH = { // \
+const INTERSECTION_BACK_SLASH: ITurn = {
   '^': '<',
   '>': 'v',
   '<': '^',
-  'v': '>'
+  v: '>',
 };
 
-export default async () => {
+interface ICart {
+  x: number;
+  y: number;
+  direction: string;
+  nextIntersection: number;
+  key: string;
+}
+
+export default async (): Promise<void> => {
   const input = getAsArray('13.txt');
 
-  const grid = input.map(o => o.split(''));
-  let carts = [];
+  // toggle flag to print cart movement
+  const PRINT_GRID = false;
+
+  const grid = input.map((o) => o.split(''));
+  let carts: ICart[] = [];
 
   for (let y = 0, lenY = grid.length; y < lenY; y++) {
     for (let x = 0, lenX = grid[y].length; x < lenX; x++) {
       const gridItem = grid[y][x];
-      if (Object.values(CART_DIRECTION).some(c => gridItem === c)) {
+      if (Object.values(CART_DIRECTION).some((c) => gridItem === c)) {
         carts.push({
           x,
           y,
           direction: gridItem,
           nextIntersection: 1,
-          key: `${x},${y}`
+          key: `${x},${y}`,
         });
-        grid[y][x] = [CART_DIRECTION.LEFT, CART_DIRECTION.RIGHT].some(o => gridItem === o) ? '-' : '|';
+        grid[y][x] = [CART_DIRECTION.LEFT, CART_DIRECTION.RIGHT].some(
+          (o) => gridItem === o
+        )
+          ? '-'
+          : '|';
       }
     }
   }
@@ -65,9 +84,10 @@ export default async () => {
   let firstCrash = null;
 
   while (true) {
-    // uncomment line below to print cart movement
-    // await printGrid(grid, carts, tick, 25);
-    let crashes = [];
+    if (PRINT_GRID) {
+      await printGrid(grid, carts, tick, 25);
+    }
+    let crashes: ICart[] = [];
 
     carts.forEach((cart) => {
       let nextPosition = undefined;
@@ -127,7 +147,7 @@ export default async () => {
       firstCrash = { x: crash.x, y: crash.y };
     }
 
-    carts = carts.filter(o => !crashes.some(c => o.key === c.key));
+    carts = carts.filter((o) => !crashes.some((c) => o.key === c.key));
     sortCarts(carts);
     tick++;
 
@@ -136,7 +156,7 @@ export default async () => {
     }
   }
 
-  success(`Part 1: ${firstCrash.x},${firstCrash.y}`);
+  success(`Part 1: ${firstCrash?.x},${firstCrash?.y}`);
 
   const [cart] = carts;
   success(`Part 2: ${cart.x},${cart.y}`);
@@ -144,9 +164,12 @@ export default async () => {
   end();
 };
 
-const findCrashes = (carts) => carts.filter((o, indexO) => carts.some((c, indexX) => o.x === c.x && o.y === c.y && indexO !== indexX));
+const findCrashes = (carts: ICart[]): ICart[] =>
+  carts.filter((o, indexO) =>
+    carts.some((c, indexX) => o.x === c.x && o.y === c.y && indexO !== indexX)
+  );
 
-const sortCarts = (carts) => {
+const sortCarts = (carts: ICart[]) => {
   carts.sort((a, b) => {
     if (a.y > b.y) {
       return 1;
@@ -168,12 +191,19 @@ const sortCarts = (carts) => {
   });
 };
 
-const printGrid = async (grid, carts, tick, speed) => {
+type PrintGrid = (
+  grid: string[][],
+  carts: ICart[],
+  tick: number,
+  speed: number
+) => Promise<void>;
+
+const printGrid: PrintGrid = async (grid, carts, tick, speed) => {
   let str = '';
 
   for (let y = 0, lenY = grid.length; y < lenY; y++) {
     for (let x = 0, lenX = grid[y].length; x < lenX; x++) {
-      const cart = carts.filter(c => c.y === y && c.x === x);
+      const cart = carts.filter((c) => c.y === y && c.x === x);
       if (cart.length > 1) {
         str += chalk.redBright('X');
       } else if (cart.length === 1) {

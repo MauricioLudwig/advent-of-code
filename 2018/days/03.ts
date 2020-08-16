@@ -1,20 +1,29 @@
-import { getAsArray } from '../input/index.js';
-import { success, end } from '../utils/logger.js';
+import { getAsArray } from '../input';
+import { success, end } from '../utils/logger';
 
-export default () => {
+interface IGrid {
+  [key: string]: {
+    [key: string]: null | number;
+  };
+}
+
+interface IAreas {
+  [key: string]: number;
+}
+
+export default (): void => {
   const input = getAsArray('03.txt');
 
-  // Part 1
-  const grid = {};
+  const grid: IGrid = {};
 
-  input.forEach((o) => {
+  input.forEach((o): void => {
     const [id, , offset, dimensions] = o.split(' ');
     const coordinates = getCoordinates(offset, dimensions, id);
-    Object.keys(coordinates).forEach(k => {
+    Object.keys(coordinates).forEach((k): void => {
       const pointsX = coordinates[k];
       if (grid.hasOwnProperty(k)) {
         const pointY = grid[k];
-        Object.keys(pointsX).forEach(o => {
+        Object.keys(pointsX).forEach((o) => {
           if (pointY.hasOwnProperty(o)) {
             pointY[o] = null;
           } else {
@@ -23,7 +32,7 @@ export default () => {
         });
       } else {
         grid[k] = {};
-        Object.keys(pointsX).forEach(o => {
+        Object.keys(pointsX).forEach((o) => {
           grid[k][o] = coordinates[k][o];
         });
       }
@@ -32,26 +41,25 @@ export default () => {
 
   const overlap = Object.keys(grid).reduce((acc, curr) => {
     const x = grid[curr];
-    return acc + Object.values(x).filter(o => o === null).length;
+    return acc + Object.values(x).filter((o) => o === null).length;
   }, 0);
 
   success(`Part 1: ${overlap}`);
 
-  // Part 2
-  const areas = {};
+  const areas: IAreas = {};
 
-  input.map(o => {
+  input.forEach((o): void => {
     const [id, , , dimensions] = o.split(' ');
     const [width, height] = getDigits(dimensions);
     areas[id] = width * height;
   });
 
-  Object.keys(areas).forEach(k => {
+  Object.keys(areas).forEach((k): void => {
     const [, id] = getDigits(k);
     const area = areas[k];
 
-    const a = Object.values(grid).reduce((acc, curr) => {
-      return acc + Object.values(curr).filter(x => x === id).length;
+    const a = Object.values(grid).reduce((acc, curr): number => {
+      return acc + Object.values(curr).filter((x) => x === id).length;
     }, 0);
 
     if (area === a) {
@@ -62,17 +70,19 @@ export default () => {
   end();
 };
 
-const getDigits = (str) => {
+const getDigits = (str: string): number[] => {
   const pattern = new RegExp(/\D/, 'gi');
   return str.replace(pattern, ' ').split(' ').map(Number);
 };
 
-const getCoordinates = (offset, dimensions, id) => {
+type GetCoordinates = (offset: string, dimensions: string, id: string) => IGrid;
+
+const getCoordinates: GetCoordinates = (offset, dimensions, id) => {
   const [x0, y0] = getDigits(offset);
   const [width, height] = getDigits(dimensions);
   const [, gridId] = getDigits(id);
 
-  const coordinates = {};
+  const coordinates: IGrid = {};
 
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
