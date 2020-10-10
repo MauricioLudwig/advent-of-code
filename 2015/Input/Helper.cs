@@ -15,5 +15,10 @@ namespace _2015.Input
         {
             return File.ReadAllText(GetFilePath(fileName));
         }
+
+        public static string[] GetAsArray(string fileName)
+        {
+            return File.ReadAllLines(GetFilePath(fileName));
+        }
     }
 }

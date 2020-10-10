@@ -7,8 +7,8 @@ namespace _2015
     {
         static void Main(string[] args)
         {
-            var day1 = new _01();
-            day1.Run();
+            var day2 = new _02();
+            day2.Run();
             Console.WriteLine("Hello World!");
         }
     }
