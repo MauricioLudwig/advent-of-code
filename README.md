@@ -8,6 +8,10 @@ My solutions for the annual Advent of Code challenge. More info at https://adven
 
 ## Tech stack
 
+### 2020
+
+Node.js + TypeScript
+
 ### 2019
 
 Node.js + JavaScript
