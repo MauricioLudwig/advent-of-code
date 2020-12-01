@@ -1,5 +1,7 @@
 import chalk from 'chalk';
 
+console.log(chalk.blueBright('app.ts running!'));
+
 /**
  * * In order to use:
  * 1. import (default) function from './days/XX' where XX represents the day
@@ -10,5 +12,7 @@ import chalk from 'chalk';
  * myFunc();
  */
 
-console.log(chalk.bgBlue('app.ts running!'));
-console.log(chalk.bgBlue('app.ts finished execution!'));
+import myFunc from './days/01';
+myFunc();
+
+console.log(chalk.blueBright('app.ts finished execution!'));
