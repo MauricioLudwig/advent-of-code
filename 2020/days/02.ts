@@ -2,51 +2,48 @@ import { getAsArray } from '../input';
 import { success } from '../utils/logger';
 
 export default (): void => {
-  const pass = getAsArray('02.txt').map((o) => {
+  const passwordList = getAsArray('02.txt').map((o) => {
     const match = o.match(/(\d+)-(\d+) (\w{1}): (\w+)/);
 
     if (!match) {
       throw new Error('No match was found.');
     }
 
-    const [, d1, d2, letter, sentence] = match;
+    const [, n1, n2, letter, password] = match;
 
     return {
-      d1: parseInt(d1, 10),
-      d2: parseInt(d2, 10),
+      n1: parseInt(n1, 10),
+      n2: parseInt(n2, 10),
       letter,
-      sentence,
+      password,
     };
   });
 
-  const valid1 = pass.reduce((acc, curr) => {
-    const { d1, d2, letter, sentence } = curr;
-    const occurrence = sentence.split('').filter((o) => o === letter).length;
+  (() => {
+    const validPasswords = passwordList.reduce((acc, curr) => {
+      const { n1, n2, letter, password } = curr;
+      const occurrences = password.split('').filter((o) => o === letter).length;
+      return n1 <= occurrences && occurrences <= n2 ? acc + 1 : acc;
+    }, 0);
+    success(`Part 1: ${validPasswords}`);
+  })();
 
-    if (d1 <= occurrence && occurrence <= d2) {
-      return acc + 1;
-    }
+  (() => {
+    const validPasswords = passwordList.reduce((acc, curr) => {
+      const { n1, n2, letter, password } = curr;
 
-    return acc;
-  }, 0);
+      let count = 0;
 
-  success(`Part 1: ${valid1}`);
+      if (password[n1 - 1] === letter) {
+        count++;
+      }
 
-  const valid2 = pass.reduce((acc, curr) => {
-    const { d1, d2, letter, sentence } = curr;
+      if (password[n2 - 1] === letter) {
+        count++;
+      }
 
-    let count = 0;
-
-    if (sentence[d1 - 1] === letter) {
-      count++;
-    }
-
-    if (sentence[d2 - 1] === letter) {
-      count++;
-    }
-
-    return count === 1 ? acc + 1 : acc;
-  }, 0);
-
-  success(`Part 2: ${valid2}`);
+      return count === 1 ? acc + 1 : acc;
+    }, 0);
+    success(`Part 2: ${validPasswords}`);
+  })();
 };
