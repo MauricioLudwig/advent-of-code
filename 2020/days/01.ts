@@ -8,10 +8,10 @@ export default (): void => {
   for (let i = 0; i < numLen; i++) {
     const n1 = numbers[i];
 
-    for (let y = i; y < numLen; y++) {
+    for (let y = i + 1; y < numLen; y++) {
       const n2 = numbers[y];
 
-      for (let z = y; z < numLen; z++) {
+      for (let z = y + 1; z < numLen; z++) {
         const n3 = numbers[z];
 
         if (n1 + n2 + n3 === 2020) {
