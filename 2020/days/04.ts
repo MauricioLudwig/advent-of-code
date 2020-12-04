@@ -1,139 +1,105 @@
-// @ts-nocheck
-import { getAsArray } from '../input';
+import { getAsMatrix } from '../input';
 import { success } from '../utils/logger';
-import { sleep } from '../utils/helper-functions';
+
+const REQUIRED_FIELDS: ReadonlyArray<string> = [
+  'byr',
+  'iyr',
+  'eyr',
+  'hgt',
+  'hcl',
+  'ecl',
+  'pid',
+];
 
 export default (): void => {
-  const arr: string[] = [];
-  let str = '';
-  const input2 = getAsArray('04.txt');
-
-  while (input2.length !== 0) {
-    const e = input2.shift();
-
-    if (e === '' || e === undefined) {
-      arr.push(str);
-      str = '';
-    } else {
-      str += ` ${e}`;
-    }
-
-    if (input2.length === 0) {
-      arr.push(str);
-    }
-  }
-
-  const newArr = arr.map((o) => {
-    return o
+  const passwords = getAsMatrix('04.txt', '').map((group) =>
+    group
+      .join(' ')
       .trim()
       .split(' ')
       .reduce((acc, curr) => {
-        const match = curr.match(/(\w+):(.+)/);
+        const match = curr.match(/^(\w+):(.+)$/);
+
         if (!match) {
-          throw new Error();
+          throw new Error('No match found.');
         }
+
         const [, key, value] = match;
+
         return {
           ...acc,
           [key]: value,
         };
-      }, {});
-  });
+      }, {} as Record<string, string>)
+  );
 
-  const valid2 = newArr.reduce((acc, curr) => {
-    let valid = true;
-    const keys = Object.keys(curr);
+  (() => {
+    const validPasswords = passwords.reduce((acc, curr) => {
+      const keys = Object.keys(curr);
+      const valid = REQUIRED_FIELDS.every((o) => keys.includes(o));
+      return valid ? acc + 1 : acc;
+    }, 0);
 
-    if (
-      !['byr', 'iyr', 'eyr', 'hgt', 'hcl', 'ecl', 'pid'].every((o) =>
+    success(`Part 1: ${validPasswords}`);
+  })();
+
+  (() => {
+    const validPasswords = passwords.reduce((acc, curr) => {
+      const keys = Object.keys(curr);
+      const containsRequiredFields = REQUIRED_FIELDS.every((o) =>
         keys.includes(o)
-      )
-    ) {
-      valid = false;
-      return acc;
-    } else {
-      // part 1
-      // return acc + 1;
-    }
+      );
 
-    for (let [key, value] of Object.entries(curr)) {
-      if (key === 'pid') {
-        console.log('pid', value, /\d{9}/.test(value));
-        if (!(/\d{9}/.test(value) && value.length === 9)) {
-          valid = false;
-          break;
-        }
-      }
+      let validField = true;
 
-      if (key === 'hgt') {
-        if (!/(\d+)(cm|in)/.test(value)) {
-          valid = false;
-          break;
-        }
-
-        const [, n5, type] = value.match(/(\d+)(cm|in)/);
-        const n5AsNum = parseInt(n5);
-
-        if (type === 'cm') {
-          if (!(n5AsNum >= 150 && n5AsNum <= 193)) {
-            valid = false;
+      for (const [key, value] of Object.entries(curr)) {
+        switch (key) {
+          case 'byr':
+            validField = checkRange(value, 1920, 2002);
             break;
-          }
-        } else if (type === 'in') {
-          if (!(n5AsNum >= 59 && n5AsNum <= 76)) {
-            valid = false;
+          case 'iyr':
+            validField = checkRange(value, 2010, 2020);
             break;
-          }
-        } else {
-          console.log('WONG!');
+          case 'eyr':
+            validField = checkRange(value, 2020, 2030);
+            break;
+          case 'hgt':
+            if (!/(\d+)(cm|in)/.test(value)) {
+              validField = false;
+              break;
+            }
+            const [, height, metric] = value.match(/(\d+)(cm|in)/) || [];
+            validField =
+              metric === 'cm'
+                ? checkRange(height, 150, 193)
+                : checkRange(height, 59, 76);
+            break;
+          case 'hcl':
+            validField = /\#[a-f0-9]{6}/.test(value);
+            break;
+          case 'ecl':
+            validField = ['amb', 'blu', 'brn', 'gry', 'grn', 'hzl', 'oth'].some(
+              (o) => value === o
+            );
+            break;
+          case 'pid':
+            validField = /^\d{9}$/.test(value);
+            break;
         }
-      }
 
-      if (key === 'byr') {
-        const n = parseInt(value);
-        if (!(n >= 1920 && n <= 2002)) {
-          valid = false;
+        if (!validField) {
           break;
         }
       }
 
-      if (key === 'iyr') {
-        const n2 = parseInt(value);
-        if (!(n2 >= 2010 && n2 <= 2020)) {
-          valid = false;
-          break;
-        }
-      }
+      return containsRequiredFields && validField ? acc + 1 : acc;
+    }, 0);
 
-      if (key === 'eyr') {
-        const n3 = parseInt(value);
-        if (!(n3 >= 2020 && n3 <= 2030)) {
-          valid = false;
-          break;
-        }
-      }
+    success(`Part 2: ${validPasswords}`);
+  })();
+};
 
-      if (key === 'hcl') {
-        if (!/\#[a-f0-9]{6}/.test(value)) {
-          valid = false;
-          break;
-        }
-      }
-
-      if (key === 'ecl') {
-        if (
-          !['amb', 'blu', 'brn', 'gry', 'grn', 'hzl', 'oth'].some(
-            (o) => o === value
-          )
-        ) {
-          valid = false;
-          break;
-        }
-      }
-    }
-
-    return valid ? acc + 1 : acc;
-  }, 0);
-
-  console.log('part2', valid2);
+const checkRange = (value: string, min: number, max: number): boolean => {
+  const num = parseInt(value, 10);
+  return num >= min && num <= max;
 };
