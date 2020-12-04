@@ -16,3 +16,26 @@ export const getAsArray = (fileName: string): string[] =>
 
 export const getAsNumbersArray = (fileName: string): number[] =>
   fs.readFileSync(getFilePath(fileName)).toString().split('\n').map(Number);
+
+export const getAsMatrix = (fileName: string, divider: string): string[][] => {
+  const allLines = getAsArray(fileName);
+  const matrix: string[][] = [];
+  let group: string[] = [];
+
+  while (true) {
+    const line = allLines.shift();
+
+    if (line === divider || line === undefined) {
+      matrix.push([...group]);
+      group = [];
+
+      if (line === undefined) {
+        break;
+      }
+    } else {
+      group.push(line);
+    }
+  }
+
+  return [...matrix.map((m) => [...m])];
+};
