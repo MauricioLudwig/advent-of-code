@@ -5,12 +5,12 @@ export default (): void => {
   const grid = getAsArray('03.txt').map((o) => o.repeat(150));
 
   const treesSum = [
-    traverse(grid, 3, 1),
-    traverse(grid, 1, 1),
-    traverse(grid, 5, 1),
-    traverse(grid, 7, 1),
-    traverse(grid, 1, 2),
-  ].reduce((acc, curr) => acc * curr, 1);
+    [3, 1],
+    [1, 1],
+    [5, 1],
+    [7, 1],
+    [1, 2],
+  ].reduce((acc, [x, y]) => acc * traverse(grid, x, y), 1);
 
   success(`Part 1: ${traverse(grid, 3, 1)}`);
   success(`Part 2: ${treesSum}`);
