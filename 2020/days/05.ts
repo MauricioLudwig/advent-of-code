@@ -1,61 +1,49 @@
-// @ts-nocheck
 import { getAsArray } from '../input';
 import { success } from '../utils/logger';
 
 export default (): void => {
-  const input = getAsArray('05.txt');
-
-  const part1 = input
+  const seatIds = getAsArray('05.txt')
     .map((o) => {
       let seats = Array(128)
         .fill(0)
         .map((_, i) => i);
 
-      let combination = o.split('');
-      let ls = combination.splice(0, 7);
+      let columnPartition = o.split(''); // seats
+      let rowPartition = columnPartition.splice(0, 7); // airplane aisle
 
-      while (true) {
-        const e = ls.shift();
-        if (e === 'F') {
+      while (rowPartition.length > 0) {
+        if (rowPartition.shift() === 'F') {
           seats = seats.slice(0, seats.length / 2);
         } else {
           seats.splice(0, seats.length / 2);
         }
-
-        if (seats.length === 1) {
-          break;
-        }
       }
 
-      let column = Array(8)
+      let columnSeats = Array(8)
         .fill(0)
         .map((_, i) => i);
 
-      while (true) {
-        const e = combination.shift();
-        if (e === 'L') {
-          column = column.slice(0, column.length / 2);
+      while (columnPartition.length > 0) {
+        if (columnPartition.shift() === 'L') {
+          columnSeats = columnSeats.slice(0, columnSeats.length / 2);
         } else {
-          column.splice(0, column.length / 2);
-        }
-
-        if (column.length === 1) {
-          break;
+          columnSeats.splice(0, columnSeats.length / 2);
         }
       }
 
-      return seats.shift() * 8 + column.shift();
+      // @ts-ignore
+      return seats.shift() * 8 + columnSeats.shift();
     })
+    .filter((o) => typeof o === 'number')
     .sort((a, b) => b - a);
 
-  const [max] = part1;
-  const min = part1[part1.length - 1];
-
-  const [seatId] = Array(max - min)
-    .fill(0)
-    .map((_, i) => i + min)
-    .filter((o) => !part1.includes(o));
-
+  const [max] = seatIds;
   success(`Part 1: ${max}`);
-  success(`Part 2: ${seatId}`);
+
+  const min = seatIds[seatIds.length - 1];
+  const mySeat = Array(max - min)
+    .fill(0)
+    .map((_, i) => i + 13)
+    .find((o) => !seatIds.includes(o));
+  success(`Part 2: ${mySeat}`);
 };
