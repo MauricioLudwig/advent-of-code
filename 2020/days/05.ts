@@ -43,7 +43,7 @@ export default (): void => {
   const min = seatIds[seatIds.length - 1];
   const mySeat = Array(max - min)
     .fill(0)
-    .map((_, i) => i + 13)
+    .map((_, i) => i + min)
     .find((o) => !seatIds.includes(o));
   success(`Part 2: ${mySeat}`);
 };
