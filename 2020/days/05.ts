@@ -31,10 +31,16 @@ export default (): void => {
         }
       }
 
-      // @ts-ignore
-      return seats.shift() * 8 + columnSeats.shift();
+      const seat = seats.shift();
+      const columnSeat = columnSeats.shift();
+
+      if (seat === undefined || columnSeat === undefined) {
+        return NaN;
+      }
+
+      return seat * 8 + columnSeat;
     })
-    .filter((o) => typeof o === 'number')
+    .filter((o) => !isNaN(o))
     .sort((a, b) => b - a);
 
   const [max] = seatIds;
