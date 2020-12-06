@@ -17,7 +17,11 @@ export const getAsArray = (fileName: string): string[] =>
 export const getAsNumbersArray = (fileName: string): number[] =>
   fs.readFileSync(getFilePath(fileName)).toString().split('\n').map(Number);
 
-export const getAsMatrix = (fileName: string, divider: string): string[][] => {
+export enum Divisor {
+  NewLine = '',
+}
+
+export const getAsMatrix = (fileName: string, divisor: Divisor): string[][] => {
   const allLines = getAsArray(fileName);
   const matrix: string[][] = [];
   let group: string[] = [];
@@ -25,7 +29,7 @@ export const getAsMatrix = (fileName: string, divider: string): string[][] => {
   while (true) {
     const line = allLines.shift();
 
-    if (line === divider || line === undefined) {
+    if (line === divisor || line === undefined) {
       matrix.push([...group]);
       group = [];
 
