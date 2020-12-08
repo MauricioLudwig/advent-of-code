@@ -2,10 +2,11 @@
 
 :computer: TypeScript + Node.js
 
-:star: 14/50
+:star: 16/50
 
 | Day | Part 1 (time) | Part 1 (rank) | Part 2 (time) | Part 2 (rank) | Reflection |
 | :-: | :-----------: | ------------: | :-----------: | ------------: | ---------- |
+| [8](days/08.ts) | 00:24:51 | 6207 | 00:34:48 | 3781 | Costly mistake checking against past accumulator values as opposed to past instructions |
 | [7](days/07.ts) | 01:30:37 | 7363 | 01:54:11 | 6217 | Recursive programming significantly easier to implement using a typed system. |
 | [6](days/06.ts) | 00:07:40 | 2531 | 01:38:56 | 10462 | - |
 | [5](days/05.ts) | 00:21:33 | 3927 | 00:44:03 | 5649 | Quick solution but poor performance (in larger context) due to array reassignment instead of tracking indices. |
