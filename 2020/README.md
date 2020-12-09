@@ -2,10 +2,11 @@
 
 :computer: TypeScript + Node.js
 
-:star: 16/50
+:star: 18/50
 
 | Day | Part 1 (time) | Part 1 (rank) | Part 2 (time) | Part 2 (rank) | Reflection |
 | :-: | :-----------: | ------------: | :-----------: | ------------: | ---------- |
+| [9](days/09.ts) | 00:15:34 | 3964 | 00:23:19 | 2882 | Brute force solution checking every combination in sequential order. |
 | [8](days/08.ts) | 00:24:51 | 6207 | 00:34:48 | 3781 | Costly mistake checking against past accumulator values as opposed to past instructions. |
 | [7](days/07.ts) | 01:30:37 | 7363 | 01:54:11 | 6217 | Recursive programming significantly easier to implement using a typed system. |
 | [6](days/06.ts) | 00:07:40 | 2531 | 01:38:56 | 10462 | - |
