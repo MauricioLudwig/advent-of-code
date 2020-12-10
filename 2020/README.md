@@ -2,7 +2,7 @@
 
 :computer: TypeScript + Node.js
 
-:star: 18/50
+:star: 20/50
 
 | Day | Part 1 (time) | Part 1 (rank) | Part 2 (time) | Part 2 (rank) | Reflection |
 | :-: | :-----------: | ------------: | :-----------: | ------------: | ---------- |
