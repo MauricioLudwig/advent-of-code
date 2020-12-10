@@ -6,6 +6,7 @@
 
 | Day | Part 1 (time) | Part 1 (rank) | Part 2 (time) | Part 2 (rank) | Reflection |
 | :-: | :-----------: | ------------: | :-----------: | ------------: | ---------- |
+| [10](days/10.ts) | 00:20:27 | 5772 | 01:57:42 | 5834 | Part 2 runs in ~ 1.5-2 ms! Part 1 solved using simple traversal. Part 2 solved using recursion (backwards traversal) and storing past iterations (nodes) for reuse. |
 | [9](days/09.ts) | 00:15:34 | 3964 | 00:23:19 | 2882 | Brute force solution checking every combination in sequential order. |
 | [8](days/08.ts) | 00:24:51 | 6207 | 00:34:48 | 3781 | Costly mistake checking against past accumulator values as opposed to past instructions. |
 | [7](days/07.ts) | 01:30:37 | 7363 | 01:54:11 | 6217 | Recursive programming significantly easier to implement using a typed system. |

@@ -1,5 +1,6 @@
+import { performance } from 'perf_hooks';
 import { getAsNumbersArray } from '../input';
-import { success } from '../utils/logger';
+import { success, logPerformance } from '../utils/logger';
 
 export default (): void => {
   const jolts = getAsNumbersArray('10.txt').sort((a, b) => a - b);
@@ -27,39 +28,42 @@ export default (): void => {
   const threes = joltDifferences.filter((o) => o === 3).length + 1; // builtInJoltageAdapter
 
   success(`Part 1: ${ones * threes}`);
-  return;
 
-  const reverseJolts = [0, ...jolts, builtInJoltageAdapter].reverse();
+  const reverseJolts = [...jolts, builtInJoltageAdapter, 0].sort(
+    (a, b) => b - a
+  );
 
+  const t1 = performance.now();
   const numOfArrangements = backtrack(reverseJolts, builtInJoltageAdapter);
+  const t2 = performance.now();
 
   success(`Part 2: ${numOfArrangements}`);
+  logPerformance(t2, t1);
 };
+
+const pastNodes: Record<number, number> = {};
 
 const backtrack = (
   jolts: Array<number>,
-  currentJolt: number,
-  visitedJolts: Array<number> = []
+  currentNode: number,
+  combinations: number = 1
 ): number => {
-  const lastJolts = jolts.filter(
+  const nextJolts = jolts.filter(
     (jolt) =>
-      currentJolt - jolt <= 3 && currentJolt - jolt >= 1 && currentJolt !== jolt
+      currentNode - jolt <= 3 && currentNode - jolt >= 1 && currentNode !== jolt
   );
 
-  if (lastJolts.length === 0) {
+  if (nextJolts.length === 0) {
     return 1;
   }
 
-  const nextJolts = lastJolts.filter((o) => !visitedJolts.includes(o));
-  visitedJolts.push(...lastJolts);
+  combinations *= nextJolts.length;
+  return nextJolts.reduce((acc, curr) => {
+    if (pastNodes[curr]) {
+      return acc + pastNodes[curr];
+    }
 
-  console.log('nextJolts', nextJolts);
-
-  return (
-    (nextJolts.length === 1 ? 1 : nextJolts.length) *
-    nextJolts.reduce(
-      (acc, curr) => acc + backtrack(jolts, curr, visitedJolts),
-      1
-    )
-  );
+    pastNodes[curr] = backtrack([...jolts], curr, combinations);
+    return acc + pastNodes[curr];
+  }, 0);
 };
