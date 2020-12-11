@@ -2,10 +2,11 @@
 
 :computer: TypeScript + Node.js
 
-:star: 20/50
+:star: 22/50
 
 | Day | Part 1 (time) | Part 1 (rank) | Part 2 (time) | Part 2 (rank) | Reflection |
 | :-: | :-----------: | ------------: | :-----------: | ------------: | ---------- |
+| [11](days/11.ts) | 00:15:43 | 627 | 00:47:04 | 1999 | Nothing special today, mostly tedious evaluation of different positions on the grid. Refactored to include a fully typed reusable class. |
 | [10](days/10.ts) | 00:20:27 | 5772 | 01:57:42 | 5834 | Part 2 runs in ~ 1.5-2 ms! Part 1 solved using simple traversal. Part 2 solved using recursion (backwards traversal) and storing past iterations (nodes) for reuse. |
 | [9](days/09.ts) | 00:15:34 | 3964 | 00:23:19 | 2882 | Brute force solution checking every combination in sequential order. |
 | [8](days/08.ts) | 00:24:51 | 6207 | 00:34:48 | 3781 | Costly mistake checking against past accumulator values as opposed to past instructions. |
