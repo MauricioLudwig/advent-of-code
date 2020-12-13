@@ -40,14 +40,25 @@ export default async (): Promise<void> => {
       id: parseInt(o.id, 10),
     }));
 
-  for (let i = busses[0].id; i < 1e10; i += busses[0].id) {
-    const valid = busses.every((o) => {
-      return (i + o.index) % o.id === 0;
-    });
+  let increment = busses[0].id;
+  let i = increment;
+  let nextBusIndex = 1;
+
+  while (true) {
+    const valid = busses.every((o) => (i + o.index) % o.id === 0);
 
     if (valid) {
       success(`Part 2: ${i}`);
       break;
     }
+
+    const nextBus = busses[nextBusIndex];
+
+    if ((i + nextBus.index) % nextBus.id === 0) {
+      increment *= nextBus.id;
+      nextBusIndex++;
+    }
+
+    i += increment;
   }
 };

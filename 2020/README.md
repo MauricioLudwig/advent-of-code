@@ -2,10 +2,11 @@
 
 :computer: TypeScript + Node.js
 
-:star: 24/50
+:star: 26/50
 
 | Day | Part 1 (time) | Part 1 (rank) | Part 2 (time) | Part 2 (rank) | Reflection |
 | :-: | :-----------: | ------------: | :-----------: | ------------: | ---------- |
+| [13](days/13.ts) | 00:11:22 | 2187 | 03:40:17 | 5055 | The trick for part 2 is to somehow reduce the number of iterations (in this case by increasing the increment value). Since each bus ID is conveniently a prime number, we can increment each matching departure (from start to end) with the product of the current matching bus ID. First attempt at a solution was to simply increase by a multiple of the first bus ID, this however was way too slow. |
 | [12](days/12.ts) | 00:22:50 | 3249 | 01:00:21 | 3942 | Directions handled with simple array increments (left & right values). Math.abs essential for getting the relative coordinates correctly. |
 | [11](days/11.ts) | 00:15:43 | 627 | 00:47:04 | 1999 | Nothing special today, mostly tedious evaluation of different positions on the grid. Refactored to include a fully typed reusable class. |
 | [10](days/10.ts) | 00:20:27 | 5772 | 01:57:42 | 5834 | Part 2 runs in ~ 1.5-2 ms! Part 1 solved using simple traversal. Part 2 solved using recursion (backwards traversal) and storing past iterations (nodes) for reuse. |
