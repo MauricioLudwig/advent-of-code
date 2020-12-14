@@ -1,4 +1,5 @@
 import { getAsArray } from '../input';
+import { generateBitPermutation } from '../utils/array-methods';
 import { success } from '../utils/logger';
 
 type TOperation = {
@@ -62,16 +63,31 @@ export default async (): Promise<void> => {
     curr.operations.forEach((operation) => {
       const value = generateBitValue(operation.value);
       const result = perfMasking(value, curr.mask);
-      subMemoryBank[operation.memory] = parseInt(result.join(''), 2);
+      subMemoryBank[operation.memory] = parseInt(result, 2);
     });
 
     return { ...acc, ...subMemoryBank };
   }, {} as Record<string, number>);
 
-  const sum = Object.values(memoryBank).reduce((acc, curr) => acc + curr, 0);
+  success(`Part 1: ${getSum(memoryBank)}`);
 
-  success(`Part 1: ${sum}`);
-  success(`Part 2:`);
+  const addressBank = masks.reduce((acc, curr) => {
+    const subAddressBank: Record<string, number> = {};
+
+    curr.operations.forEach((operation) => {
+      const addressValue = generateBitValue(operation.memory);
+      const result = perfMasking(addressValue, curr.mask, true);
+      const numXs = result.split('').filter((o) => o === 'X').length;
+      const permutations = generateBitPermutation(numXs);
+      replaceWithBits(result, permutations).forEach((perm) => {
+        subAddressBank[parseInt(perm, 2)] = operation.value;
+      });
+    });
+
+    return { ...acc, ...subAddressBank };
+  }, {} as Record<string, number>);
+
+  success(`Part 2: ${getSum(addressBank)}`);
 };
 
 const generateBitValue = (decimal: number): string[] => {
@@ -80,16 +96,49 @@ const generateBitValue = (decimal: number): string[] => {
   return [...leadingZeros, ...bits.split('')].map(String);
 };
 
-const perfMasking = (value: string[], mask: string[]): string[] => {
+const perfMasking = (
+  value: string[],
+  mask: string[],
+  isVersion2 = false
+): string => {
   let result: string[] = [];
 
   for (let i = 0; i < mask.length; i++) {
-    if (mask[i] === 'X') {
-      result.push(value[i]);
+    if (isVersion2) {
+      if (mask[i] === '0') {
+        result.push(value[i]);
+      } else {
+        result.push(mask[i]);
+      }
     } else {
-      result.push(mask[i]);
+      if (mask[i] === 'X') {
+        result.push(value[i]);
+      } else {
+        result.push(mask[i]);
+      }
     }
   }
 
-  return result;
+  return result.join('');
 };
+
+const replaceWithBits = (
+  bitMask: string,
+  permutations: number[][]
+): string[] => {
+  const bitMaskLs: string[] = [];
+  permutations.map((o) => {
+    let mask = bitMask;
+
+    for (let i = 0; i < o.length; i++) {
+      mask = mask.replace('X', o[i].toString());
+    }
+
+    bitMaskLs.push(mask);
+  });
+
+  return bitMaskLs;
+};
+
+const getSum = (bank: Record<string, number>): number =>
+  Object.values(bank).reduce((acc, curr) => acc + curr, 0);
