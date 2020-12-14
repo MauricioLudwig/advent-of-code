@@ -1,6 +1,6 @@
 # Advent of Code 2020 ed.
 
-##### Table of Contents
+##### Table of contents
 1. [Stats and reflections](#stats-and-reflections)
 2. [Solutions](#solutions)
 
@@ -12,7 +12,7 @@
 
 | Day | Part 1 (time) | Part 1 (rank) | Part 2 (time) | Part 2 (rank) | Reflection |
 | :-: | :-----------: | ------------: | :-----------: | ------------: | ---------- |
-| [14](days/14.ts) | 01:28:58 | 6278 | 18:07:32 | 20395 | Turns out I could reuse a lot of logic from part 1 in solving part 2. However, finding the bit permutations turned out to be significantly more difficult. By visualizing the problem I could forego previous attempts at recursion and instead [implement a solution that relied on iteratively composing new array variations, then flattening the list and repeating this process](#day-14---docking-data). It was also easier to compose the list of permutations in isolation so I ended up writing a function that generates bit permutations to the n power. |
+| [14](days/14.ts) | 01:28:58 | 6278 | 18:07:32 | 20395 | Turns out I could reuse a lot of logic from part 1 in solving part 2. However, finding the bit permutations turned out to be significantly more difficult. By visualizing the problem I could forego previous attempts at recursion and instead [implement a solution that relied on iteratively composing new array variations, then flattening the list and repeating this process](#day-14---docking-data). It was also easier to compose the list of permutations in isolation so I ended up writing a function that generates bit permutations to the nth power. |
 | [13](days/13.ts) | 00:11:22 | 2187 | 03:40:17 | 5055 | The trick for part 2 is to somehow reduce the number of iterations (in this case by increasing the increment value). Since each bus ID is conveniently a prime number, we can increment each matching departure (from start to end) with the product of the current matching bus ID. First attempt at a solution was to simply increase by a multiple of the first bus ID, this however was way too slow. |
 | [12](days/12.ts) | 00:22:50 | 3249 | 01:00:21 | 3942 | Directions handled with simple array increments (left & right values). Math.abs essential for getting the relative coordinates correctly. |
 | [11](days/11.ts) | 00:15:43 | 627 | 00:47:04 | 1999 | Nothing special today, mostly tedious evaluation of different positions on the grid. Refactored to include a fully typed reusable class. |
