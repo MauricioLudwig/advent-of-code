@@ -1,35 +1,49 @@
+import { performance } from 'perf_hooks';
 import { getAsSingleLine } from '../input';
-import { success } from '../utils/logger';
+import { success, logPerformance } from '../utils/logger';
 
 export default async (): Promise<void> => {
-  const spokenNumbers = getAsSingleLine('15.txt').split(',').map(Number);
-  let lastSpokenNumber = spokenNumbers[spokenNumbers.length - 1];
-  const initLen = spokenNumbers.length;
+  const input = getAsSingleLine('15.txt').split(',').map(Number);
+  success(`Part 1: ${memoryGame(input, 2020)}`);
 
-  for (let i = 1; i <= 2020 - initLen; i++) {
-    if (
-      spokenNumbers.findIndex(
-        (o, fi) => o === lastSpokenNumber && fi > initLen - 1
-      ) === -1
-    ) {
-      spokenNumbers.push(0);
-      lastSpokenNumber = 0;
-    } else if (
-      spokenNumbers.filter((o) => o === lastSpokenNumber).length === 1
-    ) {
-      spokenNumbers.push(0);
-      lastSpokenNumber = 0;
-    } else {
-      const x = [...spokenNumbers].reverse();
-      const n1 = x.findIndex((o) => o === lastSpokenNumber);
-      const n2 = x.findIndex((o, i) => o === lastSpokenNumber && i !== n1);
-      spokenNumbers.push(n2 - n1);
+  const t1 = performance.now();
+  success(`Part 2: ${memoryGame(input, 30e6)}`);
+  const t2 = performance.now();
+  logPerformance(t2, t1);
+};
+
+export const memoryGame = (
+  input: Array<number>,
+  lastNumber: number
+): number => {
+  const spokenNumbers = new Map();
+  input.forEach((o, i) => spokenNumbers.set(o, [i + 1]));
+
+  const initialLength = spokenNumbers.size;
+  let lastSpokenNumber = initialLength;
+
+  for (let i = 1; i <= lastNumber - initialLength; i++) {
+    const turns = spokenNumbers.get(lastSpokenNumber);
+
+    if (turns?.length > 1) {
+      const [n2, n1] = turns;
       lastSpokenNumber = n2 - n1;
+    } else {
+      lastSpokenNumber = 0;
+    }
+
+    const indices = spokenNumbers.get(lastSpokenNumber);
+
+    if (indices) {
+      indices.unshift(i + initialLength);
+
+      if (indices.length > 2) {
+        indices.pop();
+      }
+    } else {
+      spokenNumbers.set(lastSpokenNumber, [i + initialLength]);
     }
   }
 
-  console.log(spokenNumbers[spokenNumbers.length - 1], spokenNumbers.length);
-
-  success(`Part 1`);
-  success(`Part 2`);
+  return lastSpokenNumber;
 };
