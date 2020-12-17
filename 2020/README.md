@@ -8,10 +8,12 @@
 
 :computer: TypeScript + Node.js
 
-:star: 28/50
+:star: 32/50
 
 | Day | Part 1 (time) | Part 1 (rank) | Part 2 (time) | Part 2 (rank) | Reflection |
 | :-: | :-----------: | ------------: | :-----------: | ------------: | ---------- |
+| [17](days/17.ts) | 13:54:00 | 14588 | - | - | - |
+| [16](days/16.ts) | 00:25:38 | 2900 | - | - | - |
 | [15](days/15.ts) | 00:53:24 | 5320 | 02:35:27 | 7401 | First time using new Map in JS. Early attempts at solving part 2 involved object (key/value pair) look-up but that proved too slow. Current solution runs at ~ 11 sec. |
 | [14](days/14.ts) | 01:28:58 | 6278 | 18:07:32 | 20395 | Turns out I could reuse a lot of logic from part 1 in solving part 2. However, finding the bit permutations turned out to be significantly more difficult. By visualizing the problem I could forego previous attempts at recursion and instead [implement a solution that relied on iteratively composing new array variations, then flattening the list and repeating this process](#day-14---docking-data). It was also easier to compose the list of permutations in isolation so I ended up writing a function that generates bit permutations to the nth power. |
 | [13](days/13.ts) | 00:11:22 | 2187 | 03:40:17 | 5055 | The trick for part 2 is to somehow reduce the number of iterations (in this case by increasing the increment value). Since each bus ID is conveniently a prime number, we can increment each matching departure (from start to end) with the product of the current matching bus ID. First attempt at a solution was to simply increase by a multiple of the first bus ID, this however was way too slow. |
