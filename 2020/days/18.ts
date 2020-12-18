@@ -1,46 +1,144 @@
 import { getAsArray } from '../input';
 import { success } from '../utils/logger';
 
+const Patterns = Object.freeze({
+  AnyGroup: /\(([0-9*+ ]+)\)/,
+  MulGroup: /\(([0-9* ]+)\)/,
+  Add: /(\d+) \+ (\d+)/,
+  Digit: /\d+/,
+  Single: /\((\d+)\)/,
+});
+
 export default () => {
   const input = getAsArray('18.txt');
 
-  const expressions = input.map((row) => {
-    let expression = row;
+  const sum1 = input
+    .map((row) => {
+      let expression = row;
 
-    while (true) {
-      const match = expression.match(/\(([0-9*+ ]+)\)/);
+      while (true) {
+        const [newExpression, valid] = calcGroup(expression);
 
-      if (!match) {
-        break;
+        if (!valid) {
+          break;
+        }
+
+        expression = newExpression;
       }
 
-      const [s1, s2] = match;
-      const subSum = calculateExpression(s2);
-      expression = expression.replace(s1, `${subSum}`);
-    }
+      return expression;
+    })
+    .reduce((acc, curr) => acc + calcByLeftRule(curr), 0);
 
-    return expression;
-  });
+  success(`Part 1: ${sum1}`);
 
-  const sum = expressions.reduce(
-    (acc, curr) => acc + calculateExpression(curr),
-    0
-  );
+  const sum2 = input
+    .map((row) => {
+      let expression = row;
 
-  success(`Part 1: ${sum}`);
-  success(`Part 2:`);
+      while (true) {
+        let loops = 0;
+
+        while (true) {
+          const [newExpression, valid] = calcAddGroup(expression);
+
+          if (!valid) {
+            break;
+          }
+
+          loops++;
+          expression = newExpression;
+        }
+
+        expression = clearSingleGroup(expression);
+
+        while (true) {
+          const [newExpression, valid] = calcMulGroup(expression);
+
+          if (!valid) {
+            break;
+          }
+
+          loops++;
+          expression = newExpression;
+        }
+
+        if (loops === 0) {
+          break;
+        }
+      }
+
+      return expression;
+    })
+    .reduce((acc, curr) => acc + calcByLeftRule(curr), 0);
+
+  success(`Part 2: ${sum2}`);
 };
 
-const calculateExpression = (expression: string): number => {
+const clearSingleGroup = (expression: string): string => {
+  while (true) {
+    const match = expression.match(Patterns.Single);
+
+    if (!match) {
+      break;
+    }
+
+    const [s1, s2] = match;
+    expression = expression.replace(s1, s2);
+  }
+  return expression;
+};
+
+const calcAddGroup = (expression: string): [string, boolean] => {
+  const match = expression.match(Patterns.Add);
+
+  if (!match) {
+    return [expression, false];
+  }
+
+  const [s1, n1, n2] = match;
+  const sum = parseInt(n1, 10) + parseInt(n2, 10);
+  expression = expression.replace(s1, `${sum}`);
+  return [expression, true];
+};
+
+const calcMulGroup = (expression: string): [string, boolean] => {
+  const match = expression.match(Patterns.MulGroup);
+
+  if (!match) {
+    return [expression, false];
+  }
+
+  const [s1, s2] = match;
+  const [...numbers] = s2.match(/\d+/g) || [];
+  const sum = numbers.reduce((acc, curr) => acc * parseInt(curr, 10), 1);
+  expression = expression.replace(s1, `${sum}`);
+  return [expression, true];
+};
+
+const calcGroup = (expression: string): [string, boolean] => {
+  const match = expression.match(Patterns.AnyGroup);
+
+  if (!match) {
+    return [expression, false];
+  }
+
+  const [s1, s2] = match;
+  const sum = calcByLeftRule(s2);
+  expression = expression.replace(s1, `${sum}`);
+  return [expression, true];
+};
+
+const calcByLeftRule = (expression: string): number => {
   let nextOperation = '+';
 
-  const sum = expression.split(' ').reduce((acc, curr) => {
+  return expression.split(' ').reduce((acc, curr) => {
     if (['+', '*'].some((o) => curr === o)) {
       nextOperation = curr;
       return acc;
     }
 
-    if (/\d+/.test(curr)) {
+    if (Patterns.Digit.test(curr)) {
       if (nextOperation === '+') {
         return acc + parseInt(curr, 10);
       } else {
@@ -50,6 +148,4 @@ const calculateExpression = (expression: string): number => {
 
     throw new Error('No valid char matched.');
   }, 0);
-
-  return sum;
 };

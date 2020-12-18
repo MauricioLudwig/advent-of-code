@@ -8,10 +8,11 @@
 
 :computer: TypeScript + Node.js
 
-:star: 32/50
+:star: 34/50
 
 | Day | Part 1 (time) | Part 1 (rank) | Part 2 (time) | Part 2 (rank) | Reflection |
 | :-: | :-----------: | ------------: | :-----------: | ------------: | ---------- |
+| [18](days/18.ts) | 06:24:25 | 10168 | 14:58:52 | 13951 | Pretty straightforward using regex. For part 1 I simply evaluate all inner parenthesis (denoted as groups henceforth), i.e. where no opening group precedes another. I then replace said group with the evaluated sum and rinse and repeat until there are no more groups left. For part 2 I basically do the same but for a few edge cases. I evaluate all additions available, irregardless of groups, multiply all available groups and rinse and repeat this process until there are no more groups left. Definitely room for improvement though, among other not reassigning the expressions and using the global flag to update every matching entry. |
 | [17](days/17.ts) | 13:54:00 | 14588 | - | - | - |
 | [16](days/16.ts) | 00:25:38 | 2900 | - | - | - |
 | [15](days/15.ts) | 00:53:24 | 5320 | 02:35:27 | 7401 | First time using new Map in JS. Early attempts at solving part 2 involved object (key/value pair) look-up but that proved too slow. Current solution runs at ~ 11 sec. |
