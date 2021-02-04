@@ -20,5 +20,22 @@ export default (): void => {
   }
 
   success(`Part 1: ${index}`);
+
+  let validIPs = 0;
+  let currentIP = 0;
+
+  while (currentIP <= 4294967295) {
+    const range = ranges.find((r) => currentIP >= r.low && currentIP <= r.high);
+
+    if (!range) {
+      validIPs++;
+      currentIP++;
+    } else {
+      currentIP = range.high + 1;
+    }
+  }
+
+  success(`Part 2: ${validIPs}`);
+
   end();
 };
