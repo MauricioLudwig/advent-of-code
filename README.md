@@ -23,5 +23,5 @@ My solutions for the annual Advent of Code challenge. More info at https://adven
   * TypeScript
   * Node.js
 * [2015](2015)
-  * .NET Core
-  * C#
+  * TypeScript
+  * Node.js
