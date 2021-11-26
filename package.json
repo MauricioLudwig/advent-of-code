@@ -1,0 +1,37 @@
+{
+  "name": "advent-of-code",
+  "version": "1.0.0",
+  "description": "My solutions for the annual Advent of Code challenge. More info at https://adventofcode.com/.",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node ./app.ts",
+    "dev": "tsnd --respawn ./app.ts",
+    "test": "npx jest --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MauricioLudwig/advent-of-code.git"
+  },
+  "author": "Mauricio Ludwig",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MauricioLudwig/advent-of-code/issues"
+  },
+  "homepage": "https://github.com/MauricioLudwig/advent-of-code#readme",
+  "devDependencies": {
+    "@types/crypto-js": "^4.0.2",
+    "@types/jest": "^27.0.3",
+    "@types/node": "^16.11.10",
+    "jest": "^27.3.1",
+    "ts-jest": "^27.0.7",
+    "ts-node": "^10.4.0",
+    "ts-node-dev": "^1.1.8",
+    "typescript": "^4.5.2"
+  },
+  "dependencies": {
+    "chalk": "^5.0.0",
+    "crypto-js": "^4.1.1",
+    "inquirer": "^8.2.0",
+    "log-update": "^5.0.0"
+  }
+}
