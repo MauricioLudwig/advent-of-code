@@ -5,6 +5,6 @@ import yargs from 'yargs';
   const { _ } = await parser.argv;
   const [year, day] = _;
 
-  const dayFn = require(`./${year}/${day}`);
-  await dayFn.default();
+  const fn = require(`./${year}/${day}`);
+  await fn.default();
 })();
