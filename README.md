@@ -7,6 +7,9 @@ My solutions for the annual Advent of Code challenge. More info at https://adven
 "Advent of Code is an Advent calendar of small programming puzzles for a variety of skill sets and skill levels that can be solved in any programming language you like."
 
 ## Tech stack
+* [2021](2021)
+  * TypeScript
+  * Node.js
 * [2020](2020)
   * TypeScript
   * Node.js
