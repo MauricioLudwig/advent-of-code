@@ -1,5 +1,8 @@
 import fs from 'fs';
-import { Divisor } from '../@@types';
+
+export enum Divisor {
+  NewLine = '',
+}
 
 export class Input {
   constructor(public fileName: string) {}
