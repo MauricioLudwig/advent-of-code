@@ -1,27 +1,24 @@
+import chalk from 'chalk';
+
 export class Logger {
   static success<T>(msg: T): void {
-    // green
-    console.log(msg);
+    console.log(chalk.green(msg));
   }
 
   static highlight<T>(msg: T): void {
-    // yellow
-    console.log(msg);
+    console.log(chalk.yellow(msg));
   }
 
   static danger<T>(msg: T): void {
-    // red
-    console.log(msg);
+    console.log(chalk.red(msg));
   }
 
   static primary<T>(msg: T): void {
-    // blueBright
-    console.log(msg);
+    console.log(chalk.blueBright(msg));
   }
 
   static end<T>(msg: T): void {
-    // magenta
-    console.log(msg);
+    console.log(chalk.magenta(msg));
   }
 
   static performance(t2: number, t1: number): void {
