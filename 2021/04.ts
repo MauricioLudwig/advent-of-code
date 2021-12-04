@@ -3,6 +3,10 @@ import { Divisor, Input, Logger } from '../@@utils';
 
 type TBoard = string[][];
 
+/**
+ * ! TODO: REFACTOR
+ */
+
 export default async (): TDayFn => {
   const input = new Input('./2021/files/04.txt').AsMatrix(Divisor.NewLine);
   const [s1, ...s2] = input;
@@ -13,26 +17,43 @@ export default async (): TDayFn => {
   );
 
   let stop = false;
+  let winningBoardsIndices: number[] = [];
+  let sum = 0;
 
   for (let i = 0; i < numbers?.length; i++) {
     const drawnNumbers = numbers.slice(0, i + 1);
 
     for (let b = 0; b < boards.length; b++) {
+      if (winningBoardsIndices.includes(b)) {
+        continue;
+      }
+
       const board = boards[b]!;
       const number = parseInt(numbers[i]!, 10);
 
       const [hasRowMatch, winningRow] = findRowMatch(board, drawnNumbers);
 
       if (hasRowMatch) {
-        printWinningBoard(board, number);
+        //printWinningBoard(board, number);
       }
 
       const [hasColMatch, winningColumn] = findColumnMatch(board, drawnNumbers);
 
       if (hasColMatch) {
-        printWinningBoard(board, number);
+        //printWinningBoard(board, number);
       }
 
+      if (hasRowMatch || hasColMatch) {
+        const unmarkedNumbersSum = board
+          .flat()
+          .filter((o) => !drawnNumbers.includes(o))
+          .reduce((acc, curr) => acc + parseInt(curr, 10), 0);
+        sum = number * unmarkedNumbersSum;
+        console.log('s', b, sum, drawnNumbers);
+        winningBoardsIndices.push(b);
+      }
+
+      /*
       // Part 1
       if (hasRowMatch || hasColMatch) {
         const unmarkedNumbersSum = board
@@ -45,12 +66,19 @@ export default async (): TDayFn => {
         stop = true;
         break;
       }
+      */
     }
 
     if (stop) {
       break;
     }
   }
+
+  const lastBoardToWin = winningBoardsIndices[winningBoardsIndices.length - 1]!;
+  const winningBoard = boards[lastBoardToWin];
+  console.log('win', lastBoardToWin, winningBoard, sum);
+
+  console.log('end');
 };
 
 const printWinningBoard = (board: TBoard, winningNumber: number): void => {
