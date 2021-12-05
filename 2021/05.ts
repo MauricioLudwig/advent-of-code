@@ -1,5 +1,5 @@
 import { TDayFn } from '../@@types';
-import { Divisor, Input, Logger } from '../@@utils';
+import { Input, Logger } from '../@@utils';
 
 export default async (): TDayFn => {
   const input = new Input('./2021/files/05.txt').asArray.map((o) => {
@@ -12,19 +12,16 @@ export default async (): TDayFn => {
     };
   });
 
-  const validPoints = input.filter((o) => o.x1 === o.x2 || o.y1 === o.y2);
+  const hvLines = input.filter((o) => o.x1 === o.x2 || o.y1 === o.y2);
 
-  const maxX = Math.max(...validPoints.map((o) => [o.x1, o.x2]).flat());
-  const maxY = Math.max(...validPoints.map((o) => [o.y1, o.y2]).flat());
+  const maxX = Math.max(...hvLines.map((o) => [o.x1, o.x2]).flat());
+  const maxY = Math.max(...hvLines.map((o) => [o.y1, o.y2]).flat());
 
   const grid = Array(maxY + 1)
     .fill(0)
-    .map((_) => {
-      return Array(maxX + 1).fill(0);
-    });
+    .map((_) => Array(maxX + 1).fill(0));
 
-  validPoints.forEach((o) => {
-    console.log('o', o);
+  hvLines.forEach((o) => {
     const xStart = o.x1 < o.x2 ? o.x1 : o.x2;
     const xEnd = o.x2 > o.x1 ? o.x2 : o.x1;
     const yStart = o.y1 < o.y2 ? o.y1 : o.y2;
@@ -37,37 +34,70 @@ export default async (): TDayFn => {
     }
   });
 
-  //   for (let i = 0; i < maxX; i++) {
-  //     for (let y = 0; y < maxY; y++) {
-  //         if (i === ) {
+  // printGrid(grid);
+  Logger.success(`Part 1: ${getOverlappingLines(grid)}`);
 
-  //         }
-  //       grid[i]![y]!++;
-  //     }
-  //   }
+  input
+    .filter((o) => Math.abs(o.x1 - o.x2) === Math.abs(o.y1 - o.y2))
+    .forEach((o) => {
+      if (o.y2 > o.y1) {
+        for (let y = o.y1; y <= o.y2; y++) {
+          if (o.x2 > o.x1) {
+            for (let x = o.x1; x <= o.x2; x++) {
+              if (Math.abs(o.y1 - y) === Math.abs(o.x1 - x)) {
+                grid[y]![x]! += 1;
+              }
+            }
+          } else {
+            for (let x = o.x1; x >= o.x2; x--) {
+              if (Math.abs(o.y1 - y) === Math.abs(o.x1 - x)) {
+                grid[y]![x]! += 1;
+              }
+            }
+          }
+        }
+      } else {
+        for (let y = o.y1; y >= o.y2; y--) {
+          if (o.x2 > o.x1) {
+            for (let x = o.x1; x <= o.x2; x++) {
+              if (Math.abs(o.y1 - y) === Math.abs(o.x1 - x)) {
+                grid[y]![x]! += 1;
+              }
+            }
+          } else {
+            for (let x = o.x1; x >= o.x2; x--) {
+              if (Math.abs(o.y1 - y) === Math.abs(o.x1 - x)) {
+                grid[y]![x]! += 1;
+              }
+            }
+          }
+        }
+      }
+    });
 
-  console.log('grid', grid);
-
-  //   let print = '';
-
-  //   for (let i = 0; i < grid.length; i++) {
-  //     let s = '';
-
-  //     for (let y = 0; y < grid[i]!.length; y++) {
-  //       if (grid[i]![y]! > 0) {
-  //         s += grid[i]![y]!;
-  //       } else {
-  //         s += '.';
-  //       }
-  //     }
-
-  //     print += `${s}\n`;
-  //   }
-
-  const sum = grid.flat(Infinity).reduce((acc, curr) => {
-    return acc + (curr > 1 ? 1 : 0);
-  }, 0);
-
-  console.log('Part 1', sum);
-  console.log('end');
+  // printGrid(grid);
+  Logger.success(`Part 2: ${getOverlappingLines(grid)}`);
 };
+
+const printGrid = (grid: number[][]): void => {
+  let print = '';
+
+  for (let i = 0; i < grid.length; i++) {
+    let s = '';
+
+    for (let y = 0; y < grid[i]!.length; y++) {
+      if (grid[i]![y]! > 0) {
+        s += grid[i]![y]!;
+      } else {
+        s += '.';
+      }
+    }
+
+    print += `${s}\n`;
+  }
+
+  console.log(print);
+};
+
+const getOverlappingLines = (grid: number[][]): number =>
+  grid.flat().reduce((acc, curr) => acc + (curr > 1 ? 1 : 0), 0);
