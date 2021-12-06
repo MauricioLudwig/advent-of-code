@@ -8,10 +8,11 @@
 
 :computer: TypeScript + Node.js
 
-:star: 10/50
+:star: 12/50
 
 | Day | Part 1 (time) | Part 1 (rank) | Part 2 (time) | Part 2 (rank) | Reflection |
 | :-: | :-----------: | ------------: | :-----------: | ------------: | ---------- |
+| [6](06.ts) | 00:08:24 | 2252 | 01:31:47 | 9105 | Solved part 1 by simply iterating and keeping track of each fish and its current day. This naive solution was predictably too slow for part 2 which was solved by keeping track of the count (of fish(es)) for each given day instead of tracking individual fish. |
 | [5](05.ts) | 00:22:12 | 2845 | 00:59:30 | 5057 | Loop hell, confusing attempts at traversing the grid in reverse directions. Diagonal coordinates ascertained by calculating the difference (equal) between points. A solution that includes a grid system, albeit slower, makes it easier to debug against the examples. |
 | [4](04.ts) | 00:44:21 | 4395 | 02:48:18 | 10390 | - |
 | [3](03.ts) | 00:09:50 | 2810 | 00:28:29 | 2195 | - |
