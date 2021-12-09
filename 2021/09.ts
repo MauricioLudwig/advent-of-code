@@ -37,11 +37,11 @@ export default async (): TDayFn => {
   const lowPointSum = lowPoints.reduce((acc, { value }) => acc + value + 1, 0);
   Logger.success(`Part 1: ${lowPointSum}`);
 
-  const grid = [...input.map((o) => [...o])];
+  const checked: Record<string, boolean> = {};
 
-  const basins = grid.reduce((acc, curr, y) => {
+  const basins = input.reduce((acc, curr, y) => {
     const partSum = curr.reduce(
-      (acc, _, x) => [...acc, traverseGridRecursion(grid, x, y)],
+      (acc, _, x) => [...acc, traverseGridRecursion(input, x, y, checked)],
       [] as Array<number>
     );
     return [...acc, ...partSum];
@@ -62,14 +62,25 @@ const getPoint = (grid: TGrid, x: number, y: number): number | undefined => {
   return row[x];
 };
 
-const traverseGridRecursion = (grid: TGrid, x: number, y: number): number => {
+const traverseGridRecursion = (
+  grid: TGrid,
+  x: number,
+  y: number,
+  checked: Record<string, boolean>
+): number => {
   const point = getPoint(grid, x, y) ?? Infinity;
 
   if ([9, Infinity].some((o) => point === o)) {
     return 0;
   }
 
-  grid[y]![x]! = Infinity;
+  const key = `${x},${y}`;
+
+  if (checked[key]) {
+    return 0;
+  }
+
+  checked[key] = true;
 
   return (
     1 +
@@ -78,6 +89,9 @@ const traverseGridRecursion = (grid: TGrid, x: number, y: number): number => {
       [x + 1, y],
       [x, y - 1],
       [x, y + 1],
-    ].reduce((acc, [x1, y1]) => acc + traverseGridRecursion(grid, x1!, y1!), 0)
+    ].reduce(
+      (acc, [x1, y1]) => acc + traverseGridRecursion(grid, x1!, y1!, checked),
+      0
+    )
   );
 };
