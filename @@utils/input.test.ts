@@ -1,4 +1,4 @@
-import { Input } from './input';
+import { Input, Divisor } from './input';
 
 const getFilePath = (fileName: string): string =>
   __dirname + '/../__fixtures__/files/' + fileName + '.txt';
@@ -34,5 +34,17 @@ describe('test suites for input parser', () => {
       const data = new Input(getFilePath(fileName)).asNumbersArray;
       expect(data).toEqual(result);
     });
+  });
+
+  test('should parse file as matrix', () => {
+    const data = new Input(getFilePath('as-matrix_1')).AsMatrix(
+      Divisor.NewLine
+    );
+
+    expect(data).toEqual([
+      ['7,4,9,5,11'],
+      ['22 13 17', ' 8  2 23', '21  9 14'],
+      ['123456789'],
+    ]);
   });
 });
