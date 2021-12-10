@@ -4,7 +4,7 @@ import { Input, Logger } from '../@@utils';
 export default async (): TDayFn => {
   const input = new Input('./2021/files/10.txt').asArray;
 
-  const points: Record<string, number> = {
+  const pointSystem1: Record<string, number> = {
     ')': 3,
     ']': 57,
     '}': 1197,
@@ -12,6 +12,7 @@ export default async (): TDayFn => {
   };
 
   let sum = 0;
+  const incomplete: string[] = [];
 
   for (let i = 0; i < input.length; i++) {
     let line = input[i]!;
@@ -28,13 +29,38 @@ export default async (): TDayFn => {
     }
 
     const [, group] = line.match(/([\(\[\{\<][\)\]\}\>])/) || [];
-    // corrupted
+
     if (group) {
       const [, closing] = group.split('');
-      sum += points[closing!]!;
+      sum += pointSystem1[closing!]!;
+    } else {
+      incomplete.push(line);
     }
   }
 
-  console.log('sum', sum);
-  console.log('end');
+  Logger.success(`Part 1: ${sum}`);
+
+  const pointSystem2: Record<string, number> = {
+    '(': 1,
+    '[': 2,
+    '{': 3,
+    '<': 4,
+  };
+
+  const scores: number[] = incomplete
+    .map((line) => {
+      const reverse = line.split('').reverse();
+      let sum = 0;
+
+      reverse.forEach((o) => {
+        sum *= 5;
+        sum += pointSystem2[o!]!;
+      });
+
+      return sum;
+    })
+    .sort((a, b) => a - b);
+
+  const middleScore = scores[Math.round(scores.length - 1) / 2];
+  Logger.success(`Part 2: ${middleScore}`);
 };
