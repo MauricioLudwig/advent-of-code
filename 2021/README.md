@@ -8,10 +8,11 @@
 
 :computer: TypeScript + Node.js
 
-:star: 20/50
+:star: 22/50
 
 | Day | Part 1 (time) | Part 1 (rank) | Part 2 (time) | Part 2 (rank) | Reflection |
 | :-: | :-----------: | ------------: | :-----------: | ------------: | ---------- |
+| [11](11.ts) | 00:41:50 | 3860 | 00:45:59 | 3772 | Visual solution where I could compare each iteration against the examples. Recursion used in order to increase/flash tiles on the grid. Incidentally this approach yielded a one-liner to get the solution for part 2. Missed the step counter by 1 though due to starting at index 0 in the steps iteration. |
 | [10](10.ts) | 00:17:08 | 3736 | 00:28:14 | 3279 | RegEx key to solving today's puzzles. Incidentally my idea to solve part 1 automatically transferred over to part 2. For part 2, by eliminating all the complete combinations, I was left with the inverse characters that were missing by which the score could easily be retrieved. |
 | [9](09.ts) | 00:08:13 | 1097 | 01:40:31 | 7562 | Straightforward first part. Misread instructions for part 2 and initially calculated the basins only pertaining to the lowest points in the grid (yielding too low an answer). Correct result yielded when calculating for any arbitrary coordinate using recursion & re-assigning values in order to prevent duplicate checks. |
 | [8](08.ts) | 00:24:23 | 6893 | 05:05:11 | 13605 | Approached this problem very visually by determining the placements of digits as well as each sequence's digit pattern. After which I was able to match each output to the aforementioned sequence list. Brute-force solution that leaves little to the imagination but plenty of headache. |
