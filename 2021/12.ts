@@ -17,6 +17,9 @@ export default async (): TDayFn => {
     return { from: from!, to: to! };
   });
 
+  // Toggle for Part 1 or 2
+  const isPart1 = true;
+
   let paths: TSystem[] = [
     {
       path: ['start'],
@@ -45,9 +48,26 @@ export default async (): TDayFn => {
       nexts.push(...input.filter((o) => o.to === current).map((o) => o.from));
 
       const eligibleNexts = nexts.filter((o) => {
+        if (o === 'start') {
+          return false;
+        }
+
         const isLowerCase = /[a-z]/.test(o);
         const isNotRepeat = !path.includes(o);
-        return !isLowerCase || (isLowerCase && isNotRepeat);
+        const canRepeatTwice =
+          path.includes(o) &&
+          path
+            .filter((o) => /[a-z]/.test(o))
+            .every((o) => {
+              return path.filter((p) => p === o).length < 2;
+            });
+        const canRepeat = isLowerCase && (isNotRepeat || canRepeatTwice);
+
+        if (isPart1) {
+          return !isLowerCase || (isLowerCase && isNotRepeat);
+        } else {
+          return !isLowerCase || canRepeat;
+        }
       });
 
       eligibleNexts.forEach((o) => {
@@ -65,5 +85,5 @@ export default async (): TDayFn => {
     ];
   }
 
-  Logger.success(`Part 1: ${finalPaths.length}`);
+  Logger.success(`Part ${isPart1 ? '1' : '2'}: ${finalPaths.length}`);
 };
