@@ -32,4 +32,4 @@
 
 Letter combination aquired upon folding the paper.
 
-![Origami](screenshots/day13_transparent-origami.png?raw=true "Letter combination upon folding the paper")
+![Origami](screenshots/day13_transparent-origami.PNG?raw=true "Letter combination upon folding the paper")
