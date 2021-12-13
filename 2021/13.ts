@@ -29,7 +29,7 @@ export default async (): TDayFn => {
   const yDots = dots.map((o) => o.y);
 
   const xMax = Math.max(...xDots);
-  const yMax = Math.max(...yDots);
+  const yMax = Math.max(...yDots) + (isPart1 ? 0 : 3);
 
   let grid: string[][] = Array(yMax + 1)
     .fill(0)
