@@ -8,10 +8,11 @@
 
 :computer: TypeScript + Node.js
 
-:star: 26/50
+:star: 28/50
 
 | Day | Part 1 (time) | Part 1 (rank) | Part 2 (time) | Part 2 (rank) | Reflection |
 | :-: | :-----------: | ------------: | :-----------: | ------------: | ---------- |
+| [14](14.ts) | 00:23:38 | 4107 | 02:20:38 | 6492 | Very reminiscent of earlier day where the emphasis is not necessarily in keeping track of each individual pair but rather the number of occurences for said pairs. A pair will always generate two new pairs due to the new character inserted in the middle, => NN + C = NC & CN. However the middle character will be counted twice hence the need to divide by 2 later when acquiring the true count. My original brute-force solution for part 1 did, as predicted, not lend itself well at all for part 2. |
 | [13](13.ts) | 01:36:12 | 8381 | 02:05:33 | 8631 | Approached this visually using a grid system and constructing new sub-grids when folding the paper along the x/y axis. For part 2 (of reasons unbeknownst) I could not generate the correct letter combinations (jumbled mess) unless I appended 3 to my original yMax. Fortunately my grid solution is able to fold along any length of the paper in either axis (by padding with either empty rows or columns). |
 | [12](12.ts) | 01:09:40 | 5467 | 01:34:04 | 5032 | Tried in vain to get a recursive solution working. Opted instead of using a while loop and keeping track of each path & any new subsequent paths (from the next step in the current path) generated each loop. Solution for part 2 could be optimized further as it currently runs in about ~3 seconds |
 | [11](11.ts) | 00:41:50 | 3860 | 00:45:59 | 3772 | Visual solution where I could compare each iteration against the examples. Recursion used in order to increase/flash tiles on the grid. Incidentally this approach yielded a one-liner to get the solution for part 2. Missed the step counter by 1 though due to starting at index 0 in the steps iteration. |
