@@ -1,72 +1,35 @@
-import { TDayFn } from "../@@types";
 import { Input, Logger } from "../@@utils";
 
-enum Opponent {
-  Rock = "A",
-  Paper = "B",
-  Scissors = "C",
-}
-
-enum Player {
-  Rock = "X",
-  Paper = "Y",
-  Scissors = "Z",
-}
-
-enum Outcome {
-  Lose = "X",
-  Draw = "Y",
-  Win = "Z",
-}
-
-export default async (): TDayFn => {
+export default async () => {
   const input = new Input("./2022/files/02.txt").asArray;
 
-  const score1 = input.reduce((acc, curr) => {
-    const [o, p] = curr.split(" ");
-    let score = 0;
+  const playerMap = new Map<string, number>([
+    ["AY", 8],
+    ["AX", 4],
+    ["AZ", 3],
+    ["BY", 5],
+    ["BX", 1],
+    ["BZ", 9],
+    ["CY", 2],
+    ["CX", 7],
+    ["CZ", 6],
+  ]);
 
-    if (o === Opponent.Rock) {
-      if (p === Player.Paper) score = 2 + 6;
-      else if (p === Player.Rock) score = 1 + 3;
-      else if (p === Player.Scissors) score = 3 + 0;
-    }
-    if (o === Opponent.Paper) {
-      if (p === Player.Paper) score = 2 + 3;
-      else if (p === Player.Rock) score = 1 + 0;
-      else if (p === Player.Scissors) score = 3 + 6;
-    }
-    if (o === Opponent.Scissors) {
-      if (p === Player.Paper) score = 2 + 0;
-      else if (p === Player.Rock) score = 1 + 6;
-      else if (p === Player.Scissors) score = 3 + 3;
-    }
+  const outcomeMap = new Map<string, number>([
+    ["AY", 4],
+    ["AZ", 8],
+    ["AX", 3],
+    ["BY", 5],
+    ["BZ", 9],
+    ["BX", 1],
+    ["CY", 6],
+    ["CZ", 7],
+    ["CX", 2],
+  ]);
 
-    return acc + score;
-  }, 0);
-
-  Logger.success(`Part 1: ${score1}`);
-
-  const score2 = input.reduce((acc, curr) => {
-    const [o, p] = curr.split(" ");
-    let score = 0;
-
-    if (o === Opponent.Rock) {
-      if (p === Outcome.Draw) score = 1 + 3;
-      else if (p === Outcome.Win) score = 2 + 6;
-      else if (p === Outcome.Lose) score = 3 + 0;
-    } else if (o === Opponent.Paper) {
-      if (p === Outcome.Draw) score = 2 + 3;
-      else if (p === Outcome.Win) score = 3 + 6;
-      else if (p === Outcome.Lose) score = 1 + 0;
-    } else if (o === Opponent.Scissors) {
-      if (p === Outcome.Draw) score = 3 + 3;
-      else if (p === Outcome.Win) score = 1 + 6;
-      else if (p === Outcome.Lose) score = 2 + 0;
-    }
-
-    return acc + score;
-  }, 0);
-
-  Logger.success(`Part 2: ${score2}`);
+  Logger.success(`Part 1: ${calcScore(input, playerMap)}`);
+  Logger.success(`Part 2: ${calcScore(input, outcomeMap)}`);
 };
+
+const calcScore = (input: Array<string>, map: Map<string, number>): number =>
+  input.reduce((acc, curr) => acc + (map.get(curr.replace(" ", "")) ?? 0), 0);
