@@ -1,9 +1,8 @@
-import { TDayFn } from "../@@types";
 import { Input, Logger } from "../@@utils";
 
 const pattern = /move (\d+) from (\d+) to (\d+)/;
 
-export default async (): TDayFn => {
+export default async () => {
   const input = new Input("./2022/files/05.txt").asArray
     .filter((o) => pattern.test(o))
     .map((o) => {

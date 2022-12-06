@@ -1,8 +1,7 @@
-import { TDayFn } from '../@@types';
 import { Divisor, Input, Logger } from '../@@utils';
 import chalk from 'chalk';
 
-export default async (): TDayFn => {
+export default async () => {
   const [s1, s2] =
     new Input('./2021/files/13.txt').AsMatrix(Divisor.NewLine) || [];
 

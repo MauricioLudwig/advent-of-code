@@ -1,4 +1,3 @@
-import { TDayFn } from '../@@types';
 import { Input, Logger } from '../@@utils';
 
 type TGrid = number[][];
@@ -9,7 +8,7 @@ type TPoint = {
   value: number;
 };
 
-export default async (): TDayFn => {
+export default async () => {
   const input: TGrid = new Input('./2021/files/09.txt').asArray.map((o) =>
     o.split('').map(Number)
   );

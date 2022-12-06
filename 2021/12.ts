@@ -1,4 +1,3 @@
-import { TDayFn } from '../@@types';
 import { Input, Logger } from '../@@utils';
 
 type TPath = {
@@ -11,7 +10,7 @@ type TSystem = {
   current: string;
 };
 
-export default async (): TDayFn => {
+export default async () => {
   const input: TPath[] = new Input('./2021/files/12.txt').asArray.map((o) => {
     const [, from, to] = o.match(/(.+)\-(.+)/) || [];
     return { from: from!, to: to! };

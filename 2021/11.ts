@@ -1,7 +1,6 @@
-import { TDayFn } from '../@@types';
 import { Input, Logger } from '../@@utils';
 
-export default async (): TDayFn => {
+export default async () => {
   const input = new Input('./2021/files/11.txt');
 
   const grid = input.asArray.map((o) => o.split('').map(Number));

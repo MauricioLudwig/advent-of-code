@@ -1,7 +1,6 @@
-import { TDayFn } from '../@@types';
 import { Divisor, Input, Logger } from '../@@utils';
 
-export default async (): TDayFn => {
+export default async () => {
   const [s1, s2] = new Input('./2021/files/14.txt').AsMatrix(Divisor.NewLine);
 
   // Toggle for Part 1 or 2

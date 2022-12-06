@@ -1,4 +1,3 @@
-import { TDayFn } from '../@@types';
 import { Divisor, Input, Logger } from '../@@utils';
 
 type TBoard = string[][];
@@ -7,7 +6,7 @@ type TBoard = string[][];
  * ! TODO: REFACTOR
  */
 
-export default async (): TDayFn => {
+export default async () => {
   const input = new Input('./2021/files/04.txt').AsMatrix(Divisor.NewLine);
   const [s1, ...s2] = input;
 

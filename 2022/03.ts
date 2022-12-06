@@ -1,4 +1,3 @@
-import { TDayFn } from "../@@types";
 import { Input, Logger } from "../@@utils";
 
 const getPrio = (s: string): number =>
@@ -7,7 +6,7 @@ const getPrio = (s: string): number =>
 const findCommons = (g1: Array<string>, g2: Array<string>) =>
   g1.filter((o1) => g2.some((o2) => o1 === o2));
 
-export default async (): TDayFn => {
+export default async () => {
   const input = new Input("./2022/files/03.txt").asArray;
 
   const sum1 = input.reduce((acc, curr) => {

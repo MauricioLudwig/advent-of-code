@@ -1,4 +1,3 @@
-import { TDayFn } from "../@@types";
 import { Input, Logger } from "../@@utils";
 
 const getRange = (low: number, high: number): Array<number> =>
@@ -9,7 +8,7 @@ const readDigits = (s = ""): [number, number] => {
   return [parseInt(d1, 0), parseInt(d2, 0)];
 };
 
-export default async (): TDayFn => {
+export default async () => {
   const input = new Input("./2022/files/04.txt").asArray.map((o) =>
     o.split(",").map((nums) => {
       const [d1, d2] = readDigits(nums);

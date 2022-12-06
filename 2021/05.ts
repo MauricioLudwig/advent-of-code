@@ -1,7 +1,6 @@
-import { TDayFn } from '../@@types';
 import { Input, Logger } from '../@@utils';
 
-export default async (): TDayFn => {
+export default async () => {
   const input = new Input('./2021/files/05.txt').asArray.map((o) => {
     const [, x1, y1, x2, y2] = o.match(/(\d+)\,(\d+) -> (\d+)\,(\d+)/) || [];
     return {

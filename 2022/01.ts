@@ -1,7 +1,6 @@
-import { TDayFn } from "../@@types";
 import { Divisor, Input, Logger } from "../@@utils";
 
-export default async (): TDayFn => {
+export default async () => {
   const input = new Input("./2022/files/01.txt").AsMatrix(Divisor.NewLine);
   const counts = input.map((group) =>
     group.reduce((acc, curr) => acc + parseInt(curr, 10), 0)
