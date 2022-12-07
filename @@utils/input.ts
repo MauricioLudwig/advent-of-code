@@ -1,8 +1,4 @@
-import fs from 'fs';
-
-export enum Divisor {
-  NewLine = '',
-}
+import fs from "fs";
 
 export class Input {
   constructor(public fileName: string) {}
@@ -15,15 +11,15 @@ export class Input {
     return fs
       .readFileSync(this.fileName)
       .toString()
-      .split('\n')
-      .map((o): string => o.replace('\r', ''));
+      .split("\n")
+      .map((o): string => o.replace("\r", ""));
   }
 
   get asNumbersArray(): number[] {
-    return fs.readFileSync(this.fileName).toString().split('\n').map(Number);
+    return fs.readFileSync(this.fileName).toString().split("\n").map(Number);
   }
 
-  AsMatrix(divisor: Divisor): string[][] {
+  AsMatrix(divisor = ""): string[][] {
     const allLines = this.asArray;
     const matrix: string[][] = [];
     let group: string[] = [];

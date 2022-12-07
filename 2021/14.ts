@@ -1,7 +1,7 @@
-import { Divisor, Input, Logger } from '../@@utils';
+import { Input, Logger } from "../@@utils";
 
 export default async () => {
-  const [s1, s2] = new Input('./2021/files/14.txt').AsMatrix(Divisor.NewLine);
+  const [s1, s2] = new Input("./2021/files/14.txt").AsMatrix();
 
   // Toggle for Part 1 or 2
   const isPart1 = false;
@@ -15,7 +15,7 @@ export default async () => {
   }, {} as Record<string, string>);
 
   let pairs = new Map<string, number>();
-  const init = s1![0]!.split('');
+  const init = s1![0]!.split("");
   init.forEach((o, i) => {
     const next = init[i + 1];
     if (!next) {
@@ -39,7 +39,7 @@ export default async () => {
 
     for (const [key, value] of pairs) {
       const char = rules[key]!;
-      const [s1, s2] = key.split('');
+      const [s1, s2] = key.split("");
 
       const pair1 = `${s1}${char}`;
       const pair2 = `${char}${s2}`;
@@ -56,7 +56,7 @@ export default async () => {
 
   const group = [...pairs.keys()].reduce((acc, curr) => {
     const value = pairs.get(curr)!;
-    const [s1, s2] = curr.split('');
+    const [s1, s2] = curr.split("");
 
     if (!acc[s1!]) {
       acc[s1!] = value;
@@ -76,5 +76,5 @@ export default async () => {
   const max = Math.max(...occurences);
   const min = Math.min(...occurences);
 
-  Logger.success(`Part ${isPart1 ? '1' : '2'}: ${max - min}`);
+  Logger.success(`Part ${isPart1 ? "1" : "2"}: ${max - min}`);
 };

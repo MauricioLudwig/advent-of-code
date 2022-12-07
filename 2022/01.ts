@@ -1,7 +1,7 @@
-import { Divisor, Input, Logger } from "../@@utils";
+import { Input, Logger } from "../@@utils";
 
 export default async () => {
-  const input = new Input("./2022/files/01.txt").AsMatrix(Divisor.NewLine);
+  const input = new Input("./2022/files/01.txt").AsMatrix();
   const counts = input.map((group) =>
     group.reduce((acc, curr) => acc + parseInt(curr, 10), 0)
   );

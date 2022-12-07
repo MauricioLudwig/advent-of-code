@@ -1,4 +1,4 @@
-import { Divisor, Input, Logger } from '../@@utils';
+import { Input, Logger } from "../@@utils";
 
 type TBoard = string[][];
 
@@ -7,12 +7,12 @@ type TBoard = string[][];
  */
 
 export default async () => {
-  const input = new Input('./2021/files/04.txt').AsMatrix(Divisor.NewLine);
+  const input = new Input("./2021/files/04.txt").AsMatrix();
   const [s1, ...s2] = input;
 
-  const numbers = s1![0]?.split(',')!;
+  const numbers = s1![0]?.split(",")!;
   const boards = s2!.map((o) =>
-    o.map((x) => x.split(' ').filter((y) => y !== ''))
+    o.map((x) => x.split(" ").filter((y) => y !== ""))
   );
 
   let stop = false;
@@ -48,7 +48,7 @@ export default async () => {
           .filter((o) => !drawnNumbers.includes(o))
           .reduce((acc, curr) => acc + parseInt(curr, 10), 0);
         sum = number * unmarkedNumbersSum;
-        console.log('s', b, sum, drawnNumbers);
+        console.log("s", b, sum, drawnNumbers);
         winningBoardsIndices.push(b);
       }
 
@@ -75,9 +75,9 @@ export default async () => {
 
   const lastBoardToWin = winningBoardsIndices[winningBoardsIndices.length - 1]!;
   const winningBoard = boards[lastBoardToWin];
-  console.log('win', lastBoardToWin, winningBoard, sum);
+  console.log("win", lastBoardToWin, winningBoard, sum);
 
-  console.log('end');
+  console.log("end");
 };
 
 const printWinningBoard = (board: TBoard, winningNumber: number): void => {
