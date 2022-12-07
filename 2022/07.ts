@@ -6,7 +6,7 @@ const patterns = {
   ls: /ls/,
 };
 
-type Instruction = {
+type Command = {
   type: string;
   folder?: string;
   fileName?: string;
@@ -14,71 +14,67 @@ type Instruction = {
 };
 
 export default async () => {
-  const input: Array<Instruction> = new Input(
-    "./2022/files/07.txt"
-  ).asArray.map((o) => {
-    switch (true) {
-      case patterns.path.test(o):
-        const [, type = "", folder = ""] = o.match(patterns.path) ?? [];
-        return {
-          type,
-          folder,
-        };
-      case patterns.file.test(o):
-        const [, fileSize = "", fileName = ""] = o.match(patterns.file) ?? [];
-        return {
-          type: "file",
-          fileName,
-          fileSize: parseInt(fileSize, 10),
-        };
-      case patterns.ls.test(o):
-        return {
-          type: "ls",
-        };
-      default:
-        throw new Error(`Could not match any cases for ${o}`);
+  const input: Array<Command> = new Input("./2022/files/07.txt").asArray.map(
+    (o) => {
+      switch (true) {
+        case patterns.path.test(o):
+          const [, type = "", folder = ""] = o.match(patterns.path) ?? [];
+          return {
+            type,
+            folder,
+          };
+        case patterns.file.test(o):
+          const [, fileSize = "", fileName = ""] = o.match(patterns.file) ?? [];
+          return {
+            type: "file",
+            fileName,
+            fileSize: parseInt(fileSize, 10),
+          };
+        case patterns.ls.test(o):
+          return {
+            type: "ls",
+          };
+        default:
+          throw new Error(`Could not match any cases for ${o}`);
+      }
     }
-  });
-
-  // console.log("input", input);
+  );
 
   const fileSystem: Record<string, any> = {};
   const queue: Array<string> = [];
 
-  input.forEach((o) => {
-    const subTree = getNestedObj(fileSystem, [...queue]);
+  input.forEach(({ type, folder = "", fileName = "", fileSize }) => {
+    const subDir = getDir(fileSystem, [...queue]);
 
-    switch (o.type) {
+    switch (type) {
       case "cd":
-        if (o.folder === "..") {
+        if (folder === "..") {
           queue.pop();
         } else {
-          subTree[o.folder ?? ""] = {};
-          queue.push(o.folder ?? "");
+          subDir[folder] = {};
+          queue.push(folder);
         }
         break;
       case "ls":
         break;
       case "dir":
-        subTree[o.folder ?? ""];
+        subDir[folder] = {};
         break;
       case "file":
-        subTree[o.fileName ?? ""] = o.fileSize;
+        subDir[fileName] = fileSize;
         break;
       default:
-        throw new Error(`Could not match any cases for ${o}`);
+        throw new Error(`Could not match any cases for ${type}`);
     }
   });
 
   getSumOfDirectories(fileSystem, "/");
 
-  // console.log(dirSizes);
-
-  const sum = Object.values(dirSizes)
-    .filter((o) => o <= 100000)
+  const dirsSum = Object.values(dirSizes)
+    .filter((o) => o <= 100_000)
     .reduce((acc, curr) => acc + curr, 0);
 
-  console.log(`Part 1: ${sum}`);
+  Logger.success(`Part 1: ${dirsSum}`);
 
   const unusedSpace = 7000_0000 - dirSizes["/"];
   const sizeToDelete = 3000_0000 - unusedSpace;
@@ -87,38 +83,38 @@ export default async () => {
     (o) => o >= sizeToDelete
   );
 
-  console.log(`Part 2: ${Math.min(...eligibleSizes)}`);
+  Logger.success(`Part 2: ${Math.min(...eligibleSizes)}`);
 };
 
-const getNestedObj = (
+const getDir = (
   fileSystem: Record<string, any>,
   queue: Array<string>
-): any => {
+): Record<string, any> => {
   const k = queue.shift();
 
   if (!k) {
     return fileSystem;
   }
 
-  return getNestedObj(fileSystem[k], queue);
+  return getDir(fileSystem[k], queue);
 };
 
 const dirSizes: Record<string, any> = {};
-let index = 1;
+let i = 1;
 
 const getSumOfDirectories = (dir: Record<string, any>, k: string): number => {
-  const obj = dir[k];
+  const subDir = dir[k];
 
-  const sum = Object.entries(obj).reduce((acc, [k, v]) => {
+  const sum = Object.entries(subDir).reduce((acc, [k, v]) => {
     if (typeof v === "number") {
       return acc + v;
     }
 
-    return acc + getSumOfDirectories(obj, k);
+    return acc + getSumOfDirectories(subDir, k);
   }, 0);
 
   if (dirSizes[k]) {
-    dirSizes[`${k}_${index++}`] = sum;
+    dirSizes[`${k}_${i++}`] = sum;
   } else {
     dirSizes[k] = sum;
   }
