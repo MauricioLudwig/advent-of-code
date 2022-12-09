@@ -22,18 +22,29 @@ export default async () => {
   );
 
   (() => {
-    const { t = {} } = simulateMotion(input, {
-      h: { x: 0, y: 0 },
-      t: { x: 0, y: 0 },
+    const nodes = simulateMotion(input, {
+      0: { x: 0, y: 0 },
+      1: { x: 0, y: 0 },
     });
-    Logger.success(`Part 1: ${Object.keys(t).length}`);
+
+    Logger.success(`Part 1: ${Object.keys(nodes?.["1"] ?? {}).length}`);
   })();
 
   (() => {
-    const nodes = {
-      h: { x: 0, y: 0 },
-    };
-    const obj = simulateMotion(input, nodes);
+    const nodes = simulateMotion(input, {
+      ...[...Array(10)].reduce(
+        (acc, _, i) => ({
+          ...acc,
+          [i]: {
+            x: 0,
+            y: 0,
+          },
+        }),
+        {}
+      ),
+    });
+
+    Logger.success(`Part 2`);
   })();
 };
 
@@ -66,6 +77,8 @@ const simulateMotion = (
         visitedNodes[k][`${node.x},${node.y}`] = true;
       });
     });
+
+    // printGrid();
   });
 
   return visitedNodes;
@@ -131,4 +144,28 @@ const isOutsideRange = (n1: TNode, n2: TNode): boolean => {
   const xRange = Math.abs(n1.x - n2.x);
   const yRange = Math.abs(n1.y - n2.y);
   return [xRange, yRange].some((o) => o > 1);
+};
+
+const printGrid = (nodes: Record<string, TNode>) => {
+  let s = "";
+
+  const values = Object.values(nodes);
+  const maxY = Math.max(...values.map((o) => o.y));
+  const maxX = Math.max(...values.map((o) => o.x));
+
+  for (let y = 0; y <= maxY; y++) {
+    for (let x = 0; x <= maxX; x++) {
+      if (values.some((o) => o.x === x && o.y === y)) {
+        s += "x";
+      } else {
+        s += ".";
+      }
+    }
+
+    s += "\n";
+  }
+
+  Object.keys(nodes).forEach((o) => {
+    const { x, y } = nodes[o] ?? {};
+  });
 };
