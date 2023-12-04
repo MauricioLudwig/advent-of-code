@@ -35,32 +35,37 @@ export default async () => {
   const sum1 = input.reduce((acc, curr) => acc + curr.sum1, 0);
   Logger.success(`Part 1: ${sum1}`);
 
-  const occurences = getScratchcardsRecursive(input, 1);
-  const sum2 = Object.values(occurences).reduce((acc, curr) => acc + curr, 0);
+  const dictionary = input.reduce(
+    (acc, curr) => ({
+      ...acc,
+      [curr.id]: {
+        copies: 1,
+        iterations: 1,
+      },
+    }),
+    {} as Record<
+      number,
+      {
+        copies: number;
+        iterations: number;
+      }
+    >
+  );
 
-  Logger.success(`Part 2: ${sum2}`);
-};
-
-const getScratchcardsRecursive = (
-  cards: Card[],
-  id: number,
-  occurences: Record<number, number> = {}
-): Record<number, number> => {
-  const card = cards.find((o) => o.id === id);
-
-  if (!card) {
-    return occurences;
+  for (let card of input) {
+    [...Array(card.numOfWinners)].forEach((_, i) => {
+      const nextId = card.id + i + 1;
+      const nextCard = dictionary[nextId]!;
+      const currentCard = dictionary[card.id]!;
+      nextCard.iterations += 1 * currentCard.iterations;
+      currentCard.copies += currentCard.iterations;
+    });
   }
 
-  occurences[id] = (occurences[id] ?? 0) + 1;
+  const sum2 = Object.values(dictionary).reduce(
+    (acc, curr) => acc + curr.copies,
+    0
+  );
 
-  Array(card.numOfWinners)
-    .fill(0)
-    .forEach((_, i) => {
-      const nextId = id + i + 1;
-      occurences[nextId] = (occurences[nextId] ?? 0) + 1;
-      getScratchcardsRecursive(cards, nextId, occurences);
-    });
-
-  return occurences;
+  Logger.success(`Part 2: ${sum2}`);
 };
