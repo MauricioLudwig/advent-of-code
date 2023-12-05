@@ -36,16 +36,11 @@ export default async () => {
   });
 
   Logger.success(`Part 1: ${part1(seeds, seedMaps)}`);
+  // TODO: Fix brute-force solution
   Logger.success(`Part 2: ${part2(seeds, seedMaps)}`);
 };
 
-type Memo = {
-  keys: string[];
-  value: number;
-};
-
 const part2 = (seeds: number[], seedMaps: SeedMap[]) => {
-  const memo: Memo[] = [];
   const ranges: number[][] = [];
   const seedsCopy = [...seeds];
 
@@ -54,14 +49,12 @@ const part2 = (seeds: number[], seedMaps: SeedMap[]) => {
   }
 
   let min = Infinity;
-  let iterations = 0;
 
   ranges.forEach((range) => {
     const [start, end] = range;
 
-    for (let i = start!; i < start! + end!; i++) {
+    for (let i = start!; i < start! + end! - 1; i++) {
       const value = findDestinationRecursive("seed", i, seedMaps);
-      console.log(iterations++);
       if (value < min) {
         min = value;
       }
@@ -81,25 +74,11 @@ const part1 = (seeds: number[], seedMaps: SeedMap[]): number => {
 export const findDestinationRecursive = (
   from: string,
   source: number,
-  seedMaps: SeedMap[],
-  keys: string[] = [],
-  memo: Memo[] = []
+  seedMaps: SeedMap[]
 ): number => {
-  const key = [from, source].join("");
-  keys.push(key);
-
-  const memoCache = memo.find((o) => o.keys.includes(key));
-  if (memoCache) {
-    return memoCache.value;
-  }
-
   const seedMap = seedMaps.find((o) => o.from === from);
 
   if (!seedMap) {
-    memo.push({
-      keys: [...keys],
-      value: source,
-    });
     return source;
   }
 
@@ -108,17 +87,11 @@ export const findDestinationRecursive = (
   );
 
   if (!nextSeedMap) {
-    return findDestinationRecursive(seedMap.to, source, seedMaps, keys, memo);
+    return findDestinationRecursive(seedMap.to, source, seedMaps);
   }
 
   const destination = nextSeedMap.destination - nextSeedMap.source + source;
-  return findDestinationRecursive(
-    seedMap.to,
-    destination,
-    seedMaps,
-    keys,
-    memo
-  );
+  return findDestinationRecursive(seedMap.to, destination, seedMaps);
 };
 
 export const getRange = (start: number, range: number): number[] =>
