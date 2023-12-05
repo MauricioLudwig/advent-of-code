@@ -39,13 +39,41 @@ export default async () => {
   Logger.success(`Part 2: ${part2(seeds, seedMaps)}`);
 };
 
+type Memo = {
+  keys: string[];
+  value: number;
+};
+
 const part2 = (seeds: number[], seedMaps: SeedMap[]) => {
-  return 0;
+  const memo: Memo[] = [];
+  const ranges: number[][] = [];
+  const seedsCopy = [...seeds];
+
+  while (seedsCopy.length > 0) {
+    ranges.push(seedsCopy.splice(0, 2));
+  }
+
+  let min = Infinity;
+  let iterations = 0;
+
+  ranges.forEach((range) => {
+    const [start, end] = range;
+
+    for (let i = start!; i < start! + end!; i++) {
+      const value = findDestinationRecursive("seed", i, seedMaps);
+      console.log(iterations++);
+      if (value < min) {
+        min = value;
+      }
+    }
+  });
+
+  return min;
 };
 
 const part1 = (seeds: number[], seedMaps: SeedMap[]): number => {
-  const locationNumbers = seeds.map(
-    (o) => findDestinationRecursive("seed", o, seedMaps)[1]
+  const locationNumbers = seeds.map((o) =>
+    findDestinationRecursive("seed", o, seedMaps)
   );
   return Math.min(...locationNumbers);
 };
@@ -53,12 +81,26 @@ const part1 = (seeds: number[], seedMaps: SeedMap[]): number => {
 export const findDestinationRecursive = (
   from: string,
   source: number,
-  seedMaps: SeedMap[]
-): [string, number] => {
+  seedMaps: SeedMap[],
+  keys: string[] = [],
+  memo: Memo[] = []
+): number => {
+  const key = [from, source].join("");
+  keys.push(key);
+
+  const memoCache = memo.find((o) => o.keys.includes(key));
+  if (memoCache) {
+    return memoCache.value;
+  }
+
   const seedMap = seedMaps.find((o) => o.from === from);
 
   if (!seedMap) {
-    return [from, source];
+    memo.push({
+      keys: [...keys],
+      value: source,
+    });
+    return source;
   }
 
   const nextSeedMap = seedMap.ranges.find(
@@ -66,11 +108,17 @@ export const findDestinationRecursive = (
   );
 
   if (!nextSeedMap) {
-    return findDestinationRecursive(seedMap.to, source, seedMaps);
+    return findDestinationRecursive(seedMap.to, source, seedMaps, keys, memo);
   }
 
   const destination = nextSeedMap.destination - nextSeedMap.source + source;
-  return findDestinationRecursive(seedMap.to, destination, seedMaps);
+  return findDestinationRecursive(
+    seedMap.to,
+    destination,
+    seedMaps,
+    keys,
+    memo
+  );
 };
 
 export const getRange = (start: number, range: number): number[] =>
