@@ -1,4 +1,7 @@
 import { Input, Logger } from "../@@utils";
+import { getPrimeFactorization } from "../@@utils/calc";
+
+type Network = Record<string, Record<string, string>>;
 
 export default async () => {
   const [s1, s2] = new Input("./2023/files/08.txt").AsMatrix("") ?? [];
@@ -17,11 +20,32 @@ export default async () => {
         R,
       },
     };
-  }, {} as Record<string, Record<string, string>>);
+  }, {} as Network);
 
+  const steps1 = getSteps(instructions, network);
+  Logger.success(`Part 1: ${steps1}`);
+
+  const primeFactorizationLs = Object.keys(network)
+    .filter((k) => k.endsWith("A"))
+    .map((o) => getSteps(instructions, network, o))
+    .flatMap(getPrimeFactorization);
+
+  const steps2 = Array.from(new Set(primeFactorizationLs)).reduce(
+    (acc, curr) => acc * curr,
+    1
+  );
+
+  Logger.success(`Part 2: ${steps2}`);
+};
+
+const getSteps = (
+  instructions: string[],
+  network: Network,
+  startNode = "AAA"
+): number => {
   let steps = 0;
   let loop = true;
-  let nextNode = "AAA";
+  let nextNode = startNode;
 
   while (loop) {
     for (let it of instructions) {
@@ -34,12 +58,12 @@ export default async () => {
 
       nextNode = node;
 
-      if (nextNode === "ZZZ") {
+      if (nextNode.endsWith("Z")) {
         loop = false;
         break;
       }
     }
   }
 
-  Logger.success(`Part 1: ${steps}`);
+  return steps;
 };
