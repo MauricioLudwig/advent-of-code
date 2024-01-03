@@ -14,3 +14,13 @@ export const getPrimeFactorization = (n: number): number[] => {
 
   return validNums;
 };
+
+export const calcManhattanDistance = (p1: number[], p2: number[]): number => {
+  if (p1.length !== p2.length) {
+    throw new Error("Uneven number of coordinates.");
+  }
+
+  return p1.reduce((acc, curr, index): number => {
+    return acc + Math.abs(curr - p2[index]!);
+  }, 0);
+};
